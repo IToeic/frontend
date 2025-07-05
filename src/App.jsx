@@ -1,6 +1,5 @@
 // import logo from './logo.svg';
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState } from "react";
 import "./App.css";
 import Header from "./Layouts/Header";
 import Menu from "./Layouts/Menu";
@@ -26,16 +25,8 @@ function App() {
   //   </div>
   // );
 
-  const [data, setData] = useState("");
   const [activeTab, setActiveTab] = useState();
   const [activeSubTab, setActiveSubTab] = useState();
-
-  useEffect(() => {
-    axios
-      .get("/test")
-      .then((res) => setData(res.data))
-      .catch((err) => console.log(err));
-  }, []);
 
   const handleLogoClick = () => {
     setActiveTab(null);
@@ -43,7 +34,7 @@ function App() {
   };
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col bg-gray-100">
       <Header onLogoClick={handleLogoClick} />
       <div className="flex-1 flex overflow-hidden">
         <Menu
