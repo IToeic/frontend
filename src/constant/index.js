@@ -1,4 +1,4 @@
-export const menuItems = {
+const menuItems = {
   Word: {
     label: "Word",
     subTabs: [
@@ -22,3 +22,5 @@ export const menuItems = {
     ],
   },
 };
+
+export default menuItems;

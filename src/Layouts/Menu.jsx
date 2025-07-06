@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { menuItems } from "../constant/index";
+import menuItems from "../constant/index";
 
 const Menu = ({ activeTab, setActiveTab, activeSubTab, setActiveSubTab }) => {
   //현재 선택된 탭
