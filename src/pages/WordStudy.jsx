@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import deactiveStar from "../assets/images/Freepik(DeactiveStar)-Flaticon.png";
 import activeStar from "../assets/images/PixelPerfect(ActiveStar)-Flaticon.png";
-import wordSample from "../constant/wordSample";
+import wordSample from "../mock/wordSample";
 
 const WordStudy = ({ setActiveSubTab }) => {
   const words = wordSample;

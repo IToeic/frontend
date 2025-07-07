@@ -1,5 +1,5 @@
 import { useState } from "react";
-import wordSample from "../constant/wordSample";
+import wordSample from "../mock/wordSample";
 
 const WordTest = () => {
   const [testWords, setTestWords] = useState(
