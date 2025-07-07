@@ -1,10 +1,10 @@
 import React from "react";
-import WordStudy from "../pages/WordStudy";
-import WordTest from "../pages/WordTest";
-import MyWord from "../pages//MyWord";
-import IncorrectWord from "../pages/IncorrectWord";
-import Test from "../pages/Test";
-import DashBoard from "../pages/DashBoard";
+import WordStudy from "./WordStudy";
+import WordTest from "./WordTest";
+import MyWord from "./MyWord";
+import IncorrectWord from "./IncorrectWord";
+import Test from "./Test";
+import DashBoard from "./DashBoard";
 
 const Main = ({ activeTab, activeSubTab, setActiveTab, setActiveSubTab }) => {
   const tabComponents = {

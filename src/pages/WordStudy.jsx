@@ -33,7 +33,7 @@ const WordStudy = ({ setActiveSubTab }) => {
   };
 
   // 테스트 페이지로 이동
-  const handleTest = () => {
+  const handlTodayTest = () => {
     setActiveSubTab("TodayTest");
   };
 
@@ -144,7 +144,7 @@ const WordStudy = ({ setActiveSubTab }) => {
                 if (currentIndex !== 4) {
                   handleNext();
                 } else {
-                  handleTest();
+                  handlTodayTest();
                 }
               }}
               className={`flex items-center py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 ${
