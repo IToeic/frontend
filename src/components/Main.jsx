@@ -6,11 +6,11 @@ import IncorrectWord from "../pages/IncorrectWord";
 import Test from "../pages/Test";
 import DashBoard from "../pages/DashBoard";
 
-const Main = ({ activeTab, activeSubTab }) => {
+const Main = ({ activeTab, activeSubTab, setActiveTab, setActiveSubTab }) => {
   const tabComponents = {
     Word: {
-      Study: <WordStudy />,
-      Test: <WordTest />,
+      Study: <WordStudy setActiveSubTab={setActiveSubTab} />,
+      TodayTest: <WordTest />,
     },
     Test: {
       Test: <Test />,

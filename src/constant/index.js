@@ -3,7 +3,7 @@ const menuItems = {
     label: "Word",
     subTabs: [
       { id: "Study", label: "Study", description: "하루에 다섯개씩 학습" },
-      { id: "Test", label: "Test", description: "학습한 단어 시험" },
+      { id: "TodayTest", label: "Test", description: "학습한 단어 시험" },
     ],
   },
   Test: {

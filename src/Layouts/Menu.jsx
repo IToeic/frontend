@@ -1,20 +1,22 @@
 import React, { useState } from "react";
 import menuItems from "../constant/index";
 
-const Menu = ({ activeTab, setActiveTab, activeSubTab, setActiveSubTab }) => {
-  //현재 선택된 탭
-  //현재 선택된 서브탭
+const Menu = ({
+  activeTab,
+  setActiveTab,
+  activeSubTab,
+  setActiveSubTab,
+  expandedTab,
+  setExpandedTab,
+}) => {
   const [hoveredTab, setHoveredTab] = useState(null);
   //마우스를 올린 탭
-  const [expandedTab, setExpandedTab] = useState();
-  //현재 펼쳐진 탭
 
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
     setExpandedTab(tabName); // 클릭 시 해당 탭을 고정
-    // 기본 서브탭 설정
-    const defaultSubTab = menuItems[tabName].subTabs[0].id;
-    setActiveSubTab(defaultSubTab);
+    const subTab = menuItems[tabName].subTabs[0].id;
+    setActiveSubTab(subTab);
   };
 
   const handleSubTabClick = (subTabId) => {

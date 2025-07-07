@@ -27,10 +27,12 @@ function App() {
 
   const [activeTab, setActiveTab] = useState();
   const [activeSubTab, setActiveSubTab] = useState();
+  const [expandedTab, setExpandedTab] = useState();
 
   const handleLogoClick = () => {
     setActiveTab(null);
     setActiveSubTab(null);
+    setExpandedTab(null);
   };
 
   return (
@@ -42,8 +44,15 @@ function App() {
           setActiveTab={setActiveTab}
           activeSubTab={activeSubTab}
           setActiveSubTab={setActiveSubTab}
+          expandedTab={expandedTab}
+          setExpandedTab={setExpandedTab}
         />
-        <Main activeTab={activeTab} activeSubTab={activeSubTab} />
+        <Main
+          activeTab={activeTab}
+          activeSubTab={activeSubTab}
+          setActiveTab={setActiveTab}
+          setActiveSubTab={setActiveSubTab}
+        />
       </div>
     </div>
   );

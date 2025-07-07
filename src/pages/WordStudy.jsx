@@ -3,24 +3,27 @@ import deactiveStar from "../assets/images/Freepik(DeactiveStar)-Flaticon.png";
 import activeStar from "../assets/images/PixelPerfect(ActiveStar)-Flaticon.png";
 import wordSample from "../constant/wordSample";
 
-const WordStudy = () => {
-  // 단어 임시 샘플 데이터(백엔드에서 연결 필요)
+const WordStudy = ({ setActiveSubTab }) => {
   const words = wordSample;
+  // 단어 임시 샘플 데이터(백엔드에서 연결 필요)
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isBlindMode, setIsBlindMode] = useState(false);
-  const [favorites, setFavorites] = useState([2, 4]); // 즐겨찾기된 단어 ID들
+  const [favorites, setFavorites] = useState([0]); // 즐겨찾기된 단어 ID들
 
   const currentWord = words[currentIndex];
 
+  // 이전 단어로 이동
   const handlePrevious = () => {
-    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : words.length - 1));
+    setCurrentIndex((prev) => prev - 1);
   };
 
+  // 다음 단어로 이동
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev < words.length - 1 ? prev + 1 : 0));
+    setCurrentIndex((prev) => prev + 1);
   };
 
+  // 내 단어장 추가 토글
   const toggleFavorite = (wordId) => {
     setFavorites((prev) =>
       prev.includes(wordId)
@@ -29,6 +32,14 @@ const WordStudy = () => {
     );
   };
 
+  // 테스트 페이지로 이동
+  const handleTest = () => {
+    setActiveSubTab("TodayTest");
+  };
+
+  //발음 재생
+  const handlePlayPronunciation = () => {};
+
   const isFavorite = favorites.includes(currentWord.id);
 
   return (
@@ -36,7 +47,9 @@ const WordStudy = () => {
       <div className="max-w-4xl mx-auto">
         {/* 헤더 */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">My Words</h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+            Today's Word
+          </h1>
           <p className="text-gray-600">오늘의 단어를 학습하세요</p>
         </div>
 
@@ -77,6 +90,13 @@ const WordStudy = () => {
               {currentWord.word}
             </h2>
 
+            <p
+              onClick={handlePlayPronunciation}
+              className="text-xs text-gray-600 mb-4 cursor-pointer hover:font-semibold"
+            >
+              [ 발음 ]
+            </p>
+
             {!isBlindMode && (
               <div className="space-y-4">
                 <p className="text-xl text-gray-600">{currentWord.meaning}</p>
@@ -91,10 +111,13 @@ const WordStudy = () => {
           </div>
 
           {/* 네비게이션 */}
+
           <div className="flex justify-between items-center">
             <button
               onClick={handlePrevious}
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+              className={`flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 ${
+                currentIndex === 0 ? "opacity-0 pointer-events-none" : ""
+              }`}
             >
               <svg
                 className="w-5 h-5"
@@ -117,29 +140,39 @@ const WordStudy = () => {
             </div>
 
             <button
-              onClick={handleNext}
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+              onClick={() => {
+                if (currentIndex !== 4) {
+                  handleNext();
+                } else {
+                  handleTest();
+                }
+              }}
+              className={`flex items-center py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 ${
+                currentIndex === 4 ? "px-5.5" : "px-4"
+              }`}
             >
-              <span>다음</span>
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
+              <span>{currentIndex === 4 ? "테스트" : "다음"}</span>
+              {currentIndex !== 4 && (
+                <svg
+                  className="w-5 h-5 ml-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              )}
             </button>
           </div>
         </div>
 
         {/* 진행률 표시 */}
-        <div className="bg-white rounded-lg shadow p-4">
+        {/* <div className="bg-white rounded-lg shadow p-4">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-medium text-gray-700">
               학습 진행률
@@ -154,7 +187,7 @@ const WordStudy = () => {
               style={{ width: `${((currentIndex + 1) / words.length) * 100}%` }}
             ></div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
