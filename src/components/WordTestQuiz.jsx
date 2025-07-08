@@ -1,4 +1,4 @@
-const WordTestSession = ({
+const WordTestQuiz = ({
   currentWord,
   handleSubmit,
   userInput,
@@ -43,4 +43,4 @@ const WordTestSession = ({
   );
 };
 
-export default WordTestSession;
+export default WordTestQuiz;

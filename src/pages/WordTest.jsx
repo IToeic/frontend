@@ -1,7 +1,7 @@
 import { useState } from "react";
 import wordSample from "../mock/wordSample";
 import WordTestResult from "../components/WordTestResult";
-import WordTestSession from "../components/WordTestSession";
+import WordTestQuiz from "../components/WordTestQuiz";
 
 const WordTest = () => {
   const [isFinished, setIsFinished] = useState(false);
@@ -54,7 +54,7 @@ const WordTest = () => {
     return <WordTestResult testWords={testWords} />;
   } else {
     return (
-      <WordTestSession
+      <WordTestQuiz
         currentWord={currentWord}
         handleSubmit={handleSubmit}
         userInput={userInput}
