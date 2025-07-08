@@ -1,7 +1,10 @@
 import { useState } from "react";
 import wordSample from "../mock/wordSample";
+import WordTestResult from "../components/WordTestResult";
+import WordTestSession from "../components/WordTestSession";
 
 const WordTest = () => {
+  const [isFinished, setIsFinished] = useState(false);
   const [testWords, setTestWords] = useState(
     wordSample.map((word) => ({
       ...word,
@@ -18,66 +21,47 @@ const WordTest = () => {
   // 정답 제출
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (userInput.trim() === currentWord.meaning) {
+    //뜻이 나왔으니까 단어가 맞아야 되지
+    if (userInput.trim().toLowerCase() === currentWord.word.toLowerCase()) {
+      //정답일 경우
       // 정답: 큐에서 제거
       const newQueue = queue.filter((_, idx) => idx !== currentIdx);
       if (newQueue.length === 0) {
+        setIsFinished(true);
+        //모든 문제를 풀었으면 종료 후 결과 페이지
+        return;
       } else {
+        //다음 문제로 이동
         setQueue(newQueue);
         setCurrentIdx(currentIdx % newQueue.length);
+        setUserInput("");
       }
     } else {
-      // 오답: wrongCount 증가, 큐는 그대로
-      setQueue(
-        queue.map((word, idx) =>
+      //오답일 경우
+      setTestWords(
+        testWords.map((word, idx) =>
           idx === currentIdx
             ? { ...word, wrongCount: word.wrongCount + 1 }
             : word
         )
       );
-      // 다음 문제로 이동
       setCurrentIdx((currentIdx + 1) % queue.length);
+      setUserInput("");
     }
-    setUserInput("");
   };
 
-  return (
-    <div className="flex-1 flex flex-col items-center justify-center bg-gray-50 p-6">
-      <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-xl">
-        <div className="flex justify-between items-center mb-20">
-          <span className="text-gray-700 font-semibold">
-            Q. 다음 뜻에 알맞은 단어는?
-          </span>
-        </div>
-        <div className="mb-6 flex justify-center">
-          <h2 className="text-3xl font-bold text-gray-800 mb-14">
-            {currentWord.word}
-          </h2>
-        </div>
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col space-y-4 justify-center items-center"
-        >
-          <input
-            type="text"
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
-            className="border rounded px-4 py-2 text-lg w-[80%] mb-10"
-            placeholder="단어를 입력하세요"
-            autoFocus
-          />
-          <div className="flex space-x-2 w-[80%]">
-            <button
-              type="submit"
-              className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-            >
-              채점
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
+  if (isFinished) {
+    return <WordTestResult testWords={testWords} />;
+  } else {
+    return (
+      <WordTestSession
+        currentWord={currentWord}
+        handleSubmit={handleSubmit}
+        userInput={userInput}
+        setUserInput={setUserInput}
+      />
+    );
+  }
 };
 
 export default WordTest;
