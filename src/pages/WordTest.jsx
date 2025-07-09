@@ -61,7 +61,11 @@ const WordTest = () => {
   }
 
   return (
-    <div className="relative">
+    <div className="relative bg-gray-50 p-6">
+      <div className="max-w-4xl mx-auto mb-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">Today's Test</h1>
+        <p className="text-gray-600">학습한 단어를 테스트 해보세요</p>
+      </div>
       {showFeedback && <AnswerFeedback isCorrect={isCorrect} />}
       <SubjectiveTest
         currentWord={currentWord}

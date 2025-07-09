@@ -45,7 +45,6 @@ const WordStudy = ({ setActiveSubTab }) => {
   return (
     <div className="flex-1 bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto">
-        {/* 헤더 */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
             Today's Word
