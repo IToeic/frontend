@@ -17,14 +17,23 @@ const WordTest = () => {
   const [queue, setQueue] = useState([...wordSample]);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [userInput, setUserInput] = useState("");
-
+  let [inputFlag, setInputFlag] = useState(false);
   const currentWord = queue[currentIdx];
+
+  const dev = false;
+  //개발모드 활성화 시 모든 답안 정답 처리(함부로 true 처리 하지 말것, 배포 전 무조건 false 처리 필요)
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setInputFlag(true);
 
-    const isAnswerCorrect =
+    let isAnswerCorrect =
       userInput.trim().toLowerCase() === currentWord.word.toLowerCase();
+
+    if (dev) {
+      console.log("dev");
+      isAnswerCorrect = true;
+    }
 
     setIsCorrect(isAnswerCorrect);
     setShowFeedback(true);
@@ -53,11 +62,12 @@ const WordTest = () => {
       }
 
       setUserInput("");
+      setInputFlag(false);
     }, 1500); // 1.5초 피드백 후 다음 문제 이동
   };
 
   if (isFinished) {
-    return <WordTestResult testWords={testWords} />;
+    return <WordTestResult dev={dev} testWords={testWords} />;
   }
 
   return (
@@ -72,6 +82,7 @@ const WordTest = () => {
         handleSubmit={handleSubmit}
         userInput={userInput}
         setUserInput={setUserInput}
+        inputFlag={inputFlag}
       />
     </div>
   );

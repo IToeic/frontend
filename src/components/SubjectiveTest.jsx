@@ -3,6 +3,7 @@ const SubjectiveTest = ({
   handleSubmit,
   userInput,
   setUserInput,
+  inputFlag,
 }) => {
   return (
     <div className="flex-1 flex flex-col items-center justify-center">
@@ -27,7 +28,7 @@ const SubjectiveTest = ({
             onChange={(e) => setUserInput(e.target.value)}
             className="border rounded px-4 py-2 text-lg w-[80%] mb-10"
             placeholder="단어를 입력하세요"
-            autoFocus
+            disabled={inputFlag}
           />
           <div className="flex space-x-2 w-[80%]">
             <button

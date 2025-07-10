@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import deactiveStar from "../assets/images/Freepik(DeactiveStar)-Flaticon.png";
-import activeStar from "../assets/images/PixelPerfect(ActiveStar)-Flaticon.png";
 import wordSample from "../mock/wordSample";
+import FavoriteToggle from "../components/FavoriteToggle";
 
 const WordStudy = ({ setActiveSubTab }) => {
   const words = wordSample;
@@ -9,7 +8,9 @@ const WordStudy = ({ setActiveSubTab }) => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isBlindMode, setIsBlindMode] = useState(false);
-  const [favorites, setFavorites] = useState([0]); // 즐겨찾기된 단어 ID들
+  const [favorites, setFavorites] = useState(
+    wordSample.filter((w) => w.isFavorite)
+  );
 
   const currentWord = words[currentIndex];
 
@@ -23,15 +24,6 @@ const WordStudy = ({ setActiveSubTab }) => {
     setCurrentIndex((prev) => prev + 1);
   };
 
-  // 내 단어장 추가 토글
-  const toggleFavorite = (wordId) => {
-    setFavorites((prev) =>
-      prev.includes(wordId)
-        ? prev.filter((id) => id !== wordId)
-        : [...prev, wordId]
-    );
-  };
-
   // 테스트 페이지로 이동
   const handlTodayTest = () => {
     setActiveSubTab("TodayTest");
@@ -39,8 +31,6 @@ const WordStudy = ({ setActiveSubTab }) => {
 
   //발음 재생
   const handlePlayPronunciation = () => {};
-
-  const isFavorite = favorites.includes(currentWord.id);
 
   return (
     <div className="flex-1 bg-gray-50 p-6">
@@ -70,17 +60,11 @@ const WordStudy = ({ setActiveSubTab }) => {
               </label>
             </div>
 
-            {/* 즐겨찾기 버튼 */}
-            <button
-              onClick={() => toggleFavorite(currentWord.id)}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
-            >
-              <img
-                src={isFavorite ? activeStar : deactiveStar}
-                alt="favorite"
-                className="w-6 h-6"
-              />
-            </button>
+            <FavoriteToggle
+              wordId={currentWord.id}
+              favorites={favorites}
+              setFavorites={setFavorites}
+            />
           </div>
 
           {/* 단어 내용 */}
