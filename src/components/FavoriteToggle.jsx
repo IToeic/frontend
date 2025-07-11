@@ -2,10 +2,14 @@ import deactiveStar from "../assets/images/Freepik(DeactiveStar)-Flaticon.png";
 import activeStar from "../assets/images/PixelPerfect(ActiveStar)-Flaticon.png";
 import wordSample from "../mock/wordSample";
 
-const FavoriteToggle = ({ wordId, favorites, setFavorites }) => {
+const FavoriteToggle = ({ dev, wordId, favorites, setFavorites }) => {
   const isFavorite = favorites.some((word) => word.id === wordId);
 
   const toggleFavorite = () => {
+    dev && console.log("click toggle");
+    dev && console.log(wordId);
+    dev && console.log(favorites);
+    dev && console.log(isFavorite);
     const isAlreadyFavorite = favorites.some((word) => word.id === wordId);
 
     if (isAlreadyFavorite) {

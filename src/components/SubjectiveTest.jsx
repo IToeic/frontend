@@ -34,6 +34,7 @@ const SubjectiveTest = ({
             <button
               type="submit"
               className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+              disabled={inputFlag}
             >
               채점
             </button>

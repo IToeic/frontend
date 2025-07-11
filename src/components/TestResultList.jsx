@@ -1,6 +1,6 @@
 import FavoriteToggle from "./FavoriteToggle";
 
-const TestResultList = ({ word, favorites, setFavorites }) => {
+const TestResultList = ({ dev, word, favorites, setFavorites }) => {
   const isCorrect = word.wrongCount === 0;
 
   return (
@@ -14,6 +14,7 @@ const TestResultList = ({ word, favorites, setFavorites }) => {
       <div className="w-1/4 text-gray-600 text-sm">{word.wrongCount}회</div>
       <div className="flex justify-center items-center w-1/12">
         <FavoriteToggle
+          dev={dev}
           wordId={word.id}
           favorites={favorites}
           setFavorites={setFavorites}

@@ -14,7 +14,7 @@ const WordTestResult = ({ dev, testWords }) => {
         <h2 className="text-2xl font-bold mb-2">테스트 통과 🎉</h2>
         <h3 className="text-lg mb-8">수고하셨습니다!</h3>
         <div className="w-full max-w-2xl bg-white rounded-xl shadow overflow-hidden">
-          <div className="bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-700 flex justify-between">
+          <div className="bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-700 flex justify-between">
             <div className="w-1/2">뜻</div>
             <div className="w-1/3">단어</div>
             <div className="w-1/4">오답 횟수</div>
@@ -23,6 +23,7 @@ const WordTestResult = ({ dev, testWords }) => {
           <div className="flex flex-col">
             {testWords.map((word) => (
               <TestResultList
+                dev={dev}
                 word={word}
                 favorites={favorites}
                 setFavorites={setFavorites}

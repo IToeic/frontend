@@ -5,6 +5,9 @@ import AnswerFeedback from "../components/AnswerFeedback";
 import SubjectiveTest from "../components/SubjectiveTest";
 
 const WordTest = () => {
+  const dev = false;
+  //개발모드 활성화 시 모든 답안 정답 처리(함부로 true 처리 하지 말것, 배포 전 무조건 false 처리 필요)
+
   const [isFinished, setIsFinished] = useState(false);
   const [testWords, setTestWords] = useState(
     wordSample.map((word) => ({
@@ -19,9 +22,6 @@ const WordTest = () => {
   const [userInput, setUserInput] = useState("");
   let [inputFlag, setInputFlag] = useState(false);
   const currentWord = queue[currentIdx];
-
-  const dev = false;
-  //개발모드 활성화 시 모든 답안 정답 처리(함부로 true 처리 하지 말것, 배포 전 무조건 false 처리 필요)
 
   const handleSubmit = (e) => {
     e.preventDefault();
