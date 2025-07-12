@@ -3,8 +3,8 @@ import WordStudy from "./WordStudy";
 import WordTest from "./WordTest";
 import MyWord from "./MyWord";
 import IncorrectWord from "./IncorrectWord";
-import Test from "./Test";
 import DashBoard from "./DashBoard";
+import WordPackTest from "./WordPackTest";
 
 const Main = ({ activeTab, activeSubTab, setActiveTab, setActiveSubTab }) => {
   const tabComponents = {
@@ -13,7 +13,7 @@ const Main = ({ activeTab, activeSubTab, setActiveTab, setActiveSubTab }) => {
       TodayTest: <WordTest />,
     },
     Test: {
-      Test: <Test />,
+      Test: <WordPackTest />,
     },
     My: {
       MyWord: <MyWord />,
