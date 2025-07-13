@@ -4,7 +4,6 @@ const MultipleChoiceTest = ({
   currentWord,
   handleSubmit,
   userInput,
-  setUserInput,
   inputFlag,
 }) => {
   return (
@@ -12,7 +11,7 @@ const MultipleChoiceTest = ({
       <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-xl">
         <div className="flex justify-between items-center mb-20">
           <span className="text-gray-700 font-semibold">
-            Q. 다음 단어에 알맞은 뜻은?
+            Q{currentWord.id}. 다음 단어에 알맞은 뜻은?
           </span>
         </div>
         <div className="mb-6 flex justify-center">
