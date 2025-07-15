@@ -1,9 +1,9 @@
 import MultipleChoiceList from "./MultipleChoiceList";
 
 const MultipleChoiceTest = ({
+  setUserInput,
   currentWord,
   handleSubmit,
-  userInput,
   inputFlag,
 }) => {
   return (
@@ -23,7 +23,12 @@ const MultipleChoiceTest = ({
           onSubmit={handleSubmit}
           className="flex flex-col space-y-4 justify-center items-center"
         >
-          <MultipleChoiceList currentWord={currentWord} />
+          <MultipleChoiceList
+            currentWord={currentWord}
+            handleSubmit={handleSubmit}
+            setUserInput={setUserInput}
+            inputFlag={inputFlag}
+          />
         </form>
       </div>
     </div>

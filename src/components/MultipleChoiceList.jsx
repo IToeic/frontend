@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import wordPackSample from "../mock/wordPackSample";
 
-const MultipleChoiceList = ({ currentWord, handleSubmit, inputFlag }) => {
+const MultipleChoiceList = ({
+  currentWord,
+  handleSubmit,
+  setUserInput,
+  inputFlag,
+}) => {
   const [options, setOptions] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState("");
 
@@ -32,12 +37,7 @@ const MultipleChoiceList = ({ currentWord, handleSubmit, inputFlag }) => {
     }
   }, [currentWord]);
 
-  const handleOptionClick = (option) => {
-    if (inputFlag) return; // 피드백 중에는 클릭 불가
-    setSelectedAnswer(option);
-  };
-
-  const handleSubmitClick = () => {
+  const handleSubmitClick = (selectedAnswer) => {
     if (!selectedAnswer) return;
 
     // 정답 여부 확인
@@ -56,7 +56,8 @@ const MultipleChoiceList = ({ currentWord, handleSubmit, inputFlag }) => {
         {options.map((option, index) => (
           <button
             key={index}
-            onClick={() => handleOptionClick(option)}
+            value={option}
+            onClick={(e) => handleSubmitClick(e.target.value)}
             disabled={inputFlag}
             className={`p-4 text-lg font-medium rounded-lg border-2 transition-all ${
               selectedAnswer === option

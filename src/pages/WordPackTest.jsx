@@ -36,6 +36,8 @@ const WordPackTest = () => {
     return <WordPackChoice onSelectWordPack={setSelectedWordPack} />;
   }
 
+  dev && console.log(testWords);
+
   const handleSubmit = (e, selectedAnswer, isAnswerCorrect) => {
     e.preventDefault();
     setInputFlag(true);
@@ -89,6 +91,7 @@ const WordPackTest = () => {
       </div>
       {showFeedback && <AnswerFeedback isCorrect={isCorrect} />}
       <MultipleChoiceTest
+        setUserInput={setUserInput}
         currentWord={currentWord}
         handleSubmit={handleSubmit}
         inputFlag={inputFlag}

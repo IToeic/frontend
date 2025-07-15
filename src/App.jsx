@@ -38,8 +38,9 @@ function App() {
   return (
     <div className="h-screen flex flex-col bg-gray-100">
       <Header onLogoClick={handleLogoClick} />
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex">
         <Menu
+          className="w-64 bg-white shadow"
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           activeSubTab={activeSubTab}
@@ -47,12 +48,14 @@ function App() {
           expandedTab={expandedTab}
           setExpandedTab={setExpandedTab}
         />
-        <Main
-          activeTab={activeTab}
-          activeSubTab={activeSubTab}
-          setActiveTab={setActiveTab}
-          setActiveSubTab={setActiveSubTab}
-        />
+        <div className="flex-1 overflow-y-auto">
+          <Main
+            activeTab={activeTab}
+            activeSubTab={activeSubTab}
+            setActiveTab={setActiveTab}
+            setActiveSubTab={setActiveSubTab}
+          />
+        </div>
       </div>
     </div>
   );
