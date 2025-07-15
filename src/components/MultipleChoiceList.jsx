@@ -17,7 +17,7 @@ const MultipleChoiceList = ({
 
       // 정답이 아닌 다른 단어들에서 3개 랜덤 선택
       const otherWords = wordPackSample.filter(
-        (word) => word.word !== correctAnswer
+        (word) => word.meaning !== correctAnswer
       );
       const shuffledOthers = otherWords
         .sort(() => Math.random() - 0.5)

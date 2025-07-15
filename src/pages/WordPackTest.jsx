@@ -63,14 +63,20 @@ const WordPackTest = () => {
         }
       } else {
         // 오답인 경우 wrongCount 증가
+        // 오답인 경우 wrongCount 증가
         const updatedTestWords = testWords.map((word) =>
           word.id === currentWord.id
             ? { ...word, wrongCount: word.wrongCount + 1 }
             : word
         );
-        setTestWords(updatedTestWords);
 
-        setCurrentIdx((currentIdx + 1) % queue.length);
+        // 현재 단어를 제외한 queue + 현재 단어를 뒤에 추가
+        const newQueue = queue.filter((_, idx) => idx !== currentIdx);
+        newQueue.push(currentWord); // 👈 현재 문제 단어를 뒤로 넣음
+
+        setTestWords(updatedTestWords);
+        setQueue(newQueue);
+        setCurrentIdx(0); // 처음 문제부터 다시
       }
 
       setInputFlag(false);
