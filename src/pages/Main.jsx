@@ -43,6 +43,10 @@ const Main = ({ activeTab, activeSubTab, setActiveTab, setActiveSubTab }) => {
     },
   };
 
+  //지금 워드팩 선택에 상관없이 테스트 탭을 누르면 먼저 진행률을 확인함
+  //워드팩이 선택되어있는지를 판단한 후 , 진행률을 판단해야 함
+  //워드 팩 선택 조건의 플래그 변수를 따로 둬서 return 안에서 처리해야 할 듯
+
   if (wordPackChoiceCheck && selectedWordPack === 0) {
     return (
       <div className="flex-1 p-8 bg-white">
