@@ -1,7 +1,7 @@
 import React from "react";
 import wordPackChoice from "../mock/wordPackChoice";
 
-const WordPackChoice = ({ onSelectWordPack }) => {
+const WordPackChoice = ({ setSelectedWordPack }) => {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto">
@@ -15,7 +15,7 @@ const WordPackChoice = ({ onSelectWordPack }) => {
             <div
               key={pack.id}
               className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer"
-              onClick={() => onSelectWordPack(pack.id)}
+              onClick={() => setSelectedWordPack(pack.id)}
             >
               <div className="mb-4">
                 <h3 className="text-xl font-bold text-gray-800 mb-2">

@@ -2,16 +2,12 @@ import { useState } from "react";
 import WordTestResult from "../components/WordTestResult";
 import AnswerFeedback from "../components/AnswerFeedback";
 import MultipleChoiceTest from "../components/MultipleChoiceTest";
-import WordPackChoice from "./WordPackChoice";
 import wordPackSample from "../mock/wordPackSample";
-import virtualUser from "../mock/virtualUser";
 
 const WordPackTest = () => {
   const dev = false;
   // 개발 모드 활성화 시 모든 답안 정답 처리(함부로 true 처리 하지 말것, 배포 전 무조건 false 처리 필요)
-  const [selectedWordPack, setSelectedWordPack] = useState(
-    virtualUser[0].wordpackIng
-  );
+
   const [isFinished, setIsFinished] = useState(false);
   const [testWords, setTestWords] = useState(
     wordPackSample.map((word) => ({
@@ -30,11 +26,6 @@ const WordPackTest = () => {
   let [inputFlag, setInputFlag] = useState(false);
   // flag 변수, 피드백 출력시 입력 불가
   const currentWord = queue[currentIdx];
-
-  // 단어팩이 선택되지 않은 경우
-  if (selectedWordPack === 0) {
-    return <WordPackChoice onSelectWordPack={setSelectedWordPack} />;
-  }
 
   dev && console.log(testWords);
 
