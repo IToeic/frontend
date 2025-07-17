@@ -9,7 +9,13 @@ import virtualUser from "../mock/virtualUser";
 import WordPackChoice from "./WordPackChoice";
 import indexesWithWordPackChoice from "../constant/indexesWithWordPackChoice";
 
-const Main = ({ activeTab, activeSubTab, setActiveTab, setActiveSubTab }) => {
+const Main = ({
+  activeTab,
+  activeSubTab,
+  setActiveTab,
+  setActiveSubTab,
+  setExpandedTab,
+}) => {
   const [selectedWordPack, setSelectedWordPack] = useState(
     virtualUser[0].wordpackIng
   );
@@ -18,11 +24,13 @@ const Main = ({ activeTab, activeSubTab, setActiveTab, setActiveSubTab }) => {
 
   const wordPackChoiceCheck = indexes.includes(activeTab);
 
+  const emptyWordPack = wordPackChoiceCheck && selectedWordPack === 0;
+
   useEffect(() => {
     const wordPackProgress = 0.4;
 
     // ❗ 워드팩이 선택되지 않았다면 early return
-    if (wordPackChoiceCheck && selectedWordPack === 0) {
+    if (emptyWordPack) {
       return;
     }
 
@@ -31,9 +39,10 @@ const Main = ({ activeTab, activeSubTab, setActiveTab, setActiveSubTab }) => {
         alert("현재 진행 중인 단어팩을 모두 마쳐야 테스트가 진행됩니다.⚠️");
         setActiveTab("");
         setActiveSubTab("");
+        setExpandedTab(null);
       }
     }
-  }, [activeTab, activeSubTab, selectedWordPack]);
+  }, [activeTab, activeSubTab, selectedWordPack, setExpandedTab]);
 
   const tabComponents = {
     Word: {
@@ -49,11 +58,7 @@ const Main = ({ activeTab, activeSubTab, setActiveTab, setActiveSubTab }) => {
     },
   };
 
-  //지금 워드팩 선택에 상관없이 테스트 탭을 누르면 먼저 진행률을 확인함
-  //워드팩이 선택되어있는지를 판단한 후 , 진행률을 판단해야 함
-  //워드 팩 선택 조건의 플래그 변수를 따로 둬서 return 안에서 처리해야 할 듯
-
-  if (wordPackChoiceCheck && selectedWordPack === 0) {
+  if (emptyWordPack) {
     return (
       <div className="flex-1 p-8 bg-white">
         <WordPackChoice setSelectedWordPack={setSelectedWordPack} />

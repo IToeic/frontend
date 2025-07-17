@@ -54,6 +54,7 @@ function App() {
             activeSubTab={activeSubTab}
             setActiveTab={setActiveTab}
             setActiveSubTab={setActiveSubTab}
+            setExpandedTab={setExpandedTab}
           />
         </div>
       </div>
