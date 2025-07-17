@@ -20,6 +20,12 @@ const Main = ({ activeTab, activeSubTab, setActiveTab, setActiveSubTab }) => {
 
   useEffect(() => {
     const wordPackProgress = 0.4;
+
+    // ❗ 워드팩이 선택되지 않았다면 early return
+    if (wordPackChoiceCheck && selectedWordPack === 0) {
+      return;
+    }
+
     if (activeTab === "Test" && wordPackProgress !== 1) {
       if (wordPackProgress > 0) {
         alert("현재 진행 중인 단어팩을 모두 마쳐야 테스트가 진행됩니다.⚠️");
@@ -27,7 +33,7 @@ const Main = ({ activeTab, activeSubTab, setActiveTab, setActiveSubTab }) => {
         setActiveSubTab("");
       }
     }
-  }, [activeTab, activeSubTab]);
+  }, [activeTab, activeSubTab, selectedWordPack]);
 
   const tabComponents = {
     Word: {
