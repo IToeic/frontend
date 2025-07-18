@@ -53,7 +53,7 @@ const Main = ({
       Test: <WordPackTest />,
     },
     My: {
-      MyWord: <MyWord />,
+      MyWord: <MyWord setActiveSubTab={setActiveSubTab} />,
       IncorrectWord: <IncorrectWord />,
     },
   };

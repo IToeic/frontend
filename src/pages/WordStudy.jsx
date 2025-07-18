@@ -1,6 +1,10 @@
+import React, { useState } from "react";
+import wordSample from "../mock/wordSample";
+
 import WordCard from "../components/WordCard";
 
 const WordStudy = ({ setActiveSubTab }) => {
+  const words = wordSample;
   return (
     <div className="flex-1 bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto">
@@ -10,7 +14,11 @@ const WordStudy = ({ setActiveSubTab }) => {
           </h1>
           <p className="text-gray-600">오늘의 단어를 학습하세요</p>
         </div>
-        <WordCard setActiveSubTab={setActiveSubTab} page="WordStudy" />
+        <WordCard
+          words={words}
+          setActiveSubTab={setActiveSubTab}
+          page="WordStudy"
+        />
       </div>
     </div>
   );

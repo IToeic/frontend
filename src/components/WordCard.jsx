@@ -1,20 +1,15 @@
 import React, { useState } from "react";
-import wordSample from "../mock/wordSample";
+
 import FavoriteToggle from "../components/FavoriteToggle";
-import myWordSample from "../mock/myWordSample";
 
-const WordCard = ({ setActiveSubTab, page }) => {
-  const words =
-    page === "WordStudy" ? wordSample : page === "MyWord" ? myWordSample : "";
-  // 단어 임시 샘플 데이터(백엔드에서 연결 필요)
-
+const WordCard = ({ words, setActiveSubTab, page }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isBlindMode, setIsBlindMode] = useState(false);
   const currentWord = words[currentIndex];
 
-  const [favorites, setFavorites] = useState(
-    wordSample.filter((w) => w.isFavorite)
-  );
+  const [favorites, setFavorites] = useState(words.filter((w) => w.isFavorite));
+
+  const len = words.length;
 
   // 이전 단어로 이동
   const handlePrevious = () => {
@@ -117,18 +112,20 @@ const WordCard = ({ setActiveSubTab, page }) => {
 
           <button
             onClick={() => {
-              if (currentIndex !== 4) {
+              if (currentIndex !== len - 1) {
                 handleNext();
-              } else {
+              } else if (page === "WordStudy") {
                 handlTodayTest();
               }
             }}
-            className={`flex items-center py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 ${
-              currentIndex === 4 ? "px-5.5" : "px-4"
+            className={`flex items-center py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 ${
+              page !== "WordStudy" && currentIndex === len - 1
+                ? "opacity-0 pointer-events-none ml-[2%]"
+                : ""
             }`}
           >
-            <span>{currentIndex === 4 ? "테스트" : "다음"}</span>
-            {currentIndex !== 4 && (
+            <span>{currentIndex === len - 1 ? "테스트" : "다음"}</span>
+            {currentIndex !== len - 1 && (
               <svg
                 className="w-5 h-5 ml-2"
                 fill="none"

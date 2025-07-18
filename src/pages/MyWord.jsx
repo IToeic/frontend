@@ -3,12 +3,13 @@ import WordList from "../components/WordList";
 import myWordSample from "../mock/myWordSample";
 import WordCard from "../components/WordCard";
 
-const MyWord = () => {
+const MyWord = ({ setActiveSubTab }) => {
   const [words, setWords] = useState(myWordSample);
 
   const deleteWord = (id) => {
     setWords(words.filter((w) => w.id !== id));
   };
+  //삭제 기능 나중에 db 연결 후 다시 구현
 
   let [doStudy, setDoStudy] = useState(false);
 
@@ -21,7 +22,11 @@ const MyWord = () => {
       <div className="max-w-4xl mx-auto mb-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">My Words</h1>
         <p className="text-gray-600">내 단어장</p>
-        <div className="w-full max-w-2xl flex justify-end align-right ml-[10%]">
+        <div
+          className={`w-full ${
+            doStudy ? "" : "ml-[10%] max-w-2xl"
+          } flex justify-end align-right `}
+        >
           <button
             onClick={HandleStudyClick}
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 mb-2"
@@ -31,9 +36,12 @@ const MyWord = () => {
         </div>
 
         {doStudy ? (
-          "Waiting..."
+          <WordCard
+            words={words}
+            setActiveSubTab={setActiveSubTab}
+            page="MyWord"
+          />
         ) : (
-          // <WordCard page="MyWord"/>
           <div className="w-full max-w-2xl bg-white rounded-xl shadow ml-[10%]">
             <div className="bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-700 flex justify-between">
               <div className="w-[40%]">단어</div>
