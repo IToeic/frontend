@@ -42,7 +42,15 @@ const Main = ({
         setExpandedTab(null);
       }
     }
-  }, [activeTab, activeSubTab, selectedWordPack, setExpandedTab]);
+  }, [
+    activeTab,
+    activeSubTab,
+    selectedWordPack,
+    setExpandedTab,
+    emptyWordPack,
+    setActiveTab,
+    setActiveSubTab,
+  ]);
 
   const tabComponents = {
     Word: {
