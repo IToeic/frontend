@@ -62,7 +62,7 @@ const Main = ({
     },
     My: {
       MyWord: <MyWord setActiveSubTab={setActiveSubTab} />,
-      IncorrectWord: <IncorrectWord />,
+      IncorrectWord: <IncorrectWord setActiveSubTab={setActiveSubTab} />,
     },
   };
 
