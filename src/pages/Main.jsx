@@ -29,7 +29,7 @@ const Main = ({
   useEffect(() => {
     const wordPackProgress = 0.4;
 
-    // ❗ 워드팩이 선택되지 않았다면 early return
+    // 워드팩이 선택되지 않았다면 return
     if (emptyWordPack) {
       return;
     }
