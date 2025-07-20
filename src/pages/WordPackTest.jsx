@@ -4,8 +4,7 @@ import AnswerFeedback from "../components/AnswerFeedback";
 import MultipleChoiceTest from "../components/MultipleChoiceTest";
 import wordPackSample from "../mock/wordPackSample";
 
-const WordPackTest = () => {
-  const dev = false;
+const WordPackTest = ({ dev }) => {
   // 개발 모드 활성화 시 모든 답안 정답 처리(함부로 true 처리 하지 말것, 배포 전 무조건 false 처리 필요)
 
   const [isFinished, setIsFinished] = useState(false);

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import menuItems from "../constant/index";
+import MenuItems from "../constant/index";
 
 const Menu = ({
   activeTab,
@@ -15,7 +15,7 @@ const Menu = ({
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
     setExpandedTab(tabName); // 클릭 시 해당 탭을 고정
-    const subTab = menuItems[tabName].subTabs[0].id;
+    const subTab = MenuItems[tabName].subTabs[0].id;
     setActiveSubTab(subTab);
   };
 
@@ -27,7 +27,7 @@ const Menu = ({
     <div className="w-48 bg-gray-50 border-r border-gray-200">
       <div className="p-4">
         <nav className="space-y-0">
-          {Object.keys(menuItems).map((tabName) => (
+          {Object.keys(MenuItems).map((tabName) => (
             <div key={tabName} className="relative">
               <button
                 onMouseEnter={() => setHoveredTab(tabName)}
@@ -39,14 +39,14 @@ const Menu = ({
                     : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                 }`}
               >
-                {menuItems[tabName].label}
+                {MenuItems[tabName].label}
               </button>
 
               {/* 서브탭 */}
               {(hoveredTab === tabName || expandedTab === tabName) && (
                 <div className="w-full bg-white border-l-4 border-blue-200 shadow-sm">
                   <div className="p-2 space-y-1">
-                    {menuItems[tabName].subTabs.map((subTab) => (
+                    {MenuItems[tabName].subTabs.map((subTab) => (
                       <button
                         key={subTab.id}
                         onClick={() => handleSubTabClick(subTab.id)}

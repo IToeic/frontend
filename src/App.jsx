@@ -1,8 +1,8 @@
 // import logo from './logo.svg';
 import { useState } from "react";
 import "./App.css";
-import Header from "./Layouts/Header";
-import Menu from "./Layouts/Menu";
+import Header from "./layouts/Header";
+import Menu from "./layouts/Menu";
 import Main from "./pages/Main";
 
 function App() {

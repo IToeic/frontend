@@ -1,7 +1,7 @@
 import { useState } from "react";
 import WordList from "../components/WordList";
 import myWordSample from "../mock/myWordSample";
-import WordCard from "../components/WordCard";
+import MultipleChoiceTest from "../components/MultipleChoiceTest";
 
 const IncorrectWord = ({ setActiveSubTab }) => {
   const [words, setWords] = useState(myWordSample);
@@ -16,6 +16,46 @@ const IncorrectWord = ({ setActiveSubTab }) => {
   const HandleStudyClick = () => {
     setDoStudy(!doStudy);
   };
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [userInput, setUserInput] = useState("");
+  // test input 값
+  let [inputFlag, setInputFlag] = useState(false);
+  // flag 변수, 피드백 출력시 입력 불가
+  const currentWord = words[currentIdx];
+
+  const handleSubmit = (e, selectedAnswer, isAnswerCorrect) => {
+    //   e.preventDefault();
+    //   setInputFlag(true);
+    //   setIsCorrect(isAnswerCorrect);
+    //   setShowFeedback(true);
+    //   setTimeout(() => {
+    //     setShowFeedback(false);
+    //     if (isAnswerCorrect) {
+    //       const newQueue = words.filter((_, idx) => idx !== currentIdx);
+    //       if (newQueue.length === 0) {
+    //         setIsFinished(true);
+    //       } else {
+    //         setWords(newQueue);
+    //         setCurrentIdx(0);
+    //       }
+    //     } else {
+    //       // 오답인 경우 wrongCount 증가
+    //       // 오답인 경우 wrongCount 증가
+    //       const updatedTestWords = testWords.map((word) =>
+    //         word.id === currentWord.id
+    //           ? { ...word, wrongCount: word.wrongCount + 1 }
+    //           : word
+    //       );
+    //       // 현재 단어를 제외한 words + 현재 단어를 뒤에 추가
+    //       const newQueue = words.filter((_, idx) => idx !== currentIdx);
+    //       newQueue.push(currentWord); // 👈 현재 문제 단어를 뒤로 넣음
+    //       setTestWords(updatedTestWords);
+    //       setWords(newQueue);
+    //       setCurrentIdx(0); // 처음 문제부터 다시
+    //     }
+    //     setInputFlag(false);
+    //   }, 1500); // 1.5초 피드백 후 다음 문제 이동
+  };
 
   return (
     <div className="relative bg-gray-50 p-6">
@@ -23,7 +63,7 @@ const IncorrectWord = ({ setActiveSubTab }) => {
         <h1 className="text-3xl font-bold text-gray-800 mb-2">
           Incorrect Words
         </h1>
-        <p className="text-gray-600">틀린 단어장</p>
+        <p className="text-gray-600">틀린 단어 모음</p>
         <div
           className={`w-full ${
             doStudy ? "" : "ml-[10%] max-w-2xl"
@@ -38,10 +78,12 @@ const IncorrectWord = ({ setActiveSubTab }) => {
         </div>
 
         {doStudy ? (
-          <WordCard
-            words={words}
-            setActiveSubTab={setActiveSubTab}
-            page="MyWord"
+          // MultipleChoiceTest.jsx 띄워야 함
+          <MultipleChoiceTest
+            setUserInput={setUserInput}
+            currentWord={currentWord}
+            handleSubmit={handleSubmit}
+            inputFlag={inputFlag}
           />
         ) : (
           <div className="w-full max-w-2xl bg-white rounded-xl shadow ml-[10%]">

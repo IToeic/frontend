@@ -26,8 +26,11 @@ const Main = ({
 
   const emptyWordPack = wordPackChoiceCheck && selectedWordPack === 0;
 
+  const dev = false;
+
   useEffect(() => {
-    const wordPackProgress = 0.4;
+    const wordPackProgress = dev || 0;
+    //DB에서 추후에 가져와야 함
 
     // 워드팩이 선택되지 않았다면 return
     if (emptyWordPack) {
@@ -50,6 +53,7 @@ const Main = ({
     emptyWordPack,
     setActiveTab,
     setActiveSubTab,
+    dev,
   ]);
 
   const tabComponents = {
@@ -58,7 +62,7 @@ const Main = ({
       TodayTest: <WordTest />,
     },
     Test: {
-      Test: <WordPackTest />,
+      Test: <WordPackTest dev={dev} />,
     },
     My: {
       MyWord: <MyWord setActiveSubTab={setActiveSubTab} />,
