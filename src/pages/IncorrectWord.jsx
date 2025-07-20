@@ -66,8 +66,8 @@ const IncorrectWord = ({ setActiveSubTab }) => {
         <p className="text-gray-600">틀린 단어 모음</p>
         <div
           className={`w-full ${
-            doStudy ? "" : "ml-[10%] max-w-2xl"
-          } flex justify-end align-right `}
+            doStudy ? "ml-[7%] " : "ml-[10%]"
+          } max-w-2xl flex justify-end items-end`}
         >
           <button
             onClick={HandleStudyClick}
