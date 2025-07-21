@@ -1,8 +1,8 @@
 import { useState } from "react";
-import WordList from "../components/WordList";
-import myWordSample from "../mock/myWordSample";
-import MultipleChoiceList from "../components/MultipleChoiceList";
-import AnswerFeedback from "../components/AnswerFeedback";
+import WordList from "../../components/WordList";
+import myWordSample from "../../mock/myWordSample";
+import MultipleChoiceList from "../../components/MultipleChoiceList";
+import AnswerFeedback from "../../components/AnswerFeedback";
 
 const IncorrectWord = ({ setActiveSubTab }) => {
   const [words, setWords] = useState(myWordSample);

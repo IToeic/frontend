@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import wordSample from "../mock/wordSample";
+import wordSample from "../../mock/wordSample";
 
-import WordCard from "../components/WordCard";
+import WordCard from "../../components/WordCard";
 
 const WordStudy = ({ setActiveSubTab }) => {
   const words = wordSample;

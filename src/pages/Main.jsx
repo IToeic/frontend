@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import WordStudy from "./WordStudy";
-import WordTest from "./WordTest";
-import MyWord from "./MyWord";
-import IncorrectWord from "./IncorrectWord";
+import WordStudy from "./Word/WordStudy";
+import WordTest from "./Word/WordTest";
+import MyWord from "./My/MyWord";
+import IncorrectWord from "./My/IncorrectWord";
 import DashBoard from "./DashBoard";
-import WordPackTest from "./WordPackTest";
+import WordPackTest from "./Test/WordPackTest";
 import virtualUser from "../mock/virtualUser";
 import WordPackChoice from "./WordPackChoice";
 import indexesWithWordPackChoice from "../constant/indexesWithWordPackChoice";
@@ -26,7 +26,7 @@ const Main = ({
 
   const emptyWordPack = wordPackChoiceCheck && selectedWordPack === 0;
 
-  const dev = true;
+  const dev = false;
 
   useEffect(() => {
     const wordPackProgress = dev ? 1 : 0; //getActualProgress();

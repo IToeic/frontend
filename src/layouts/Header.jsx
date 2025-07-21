@@ -25,21 +25,12 @@ const Header = ({ onLogoClick }) => {
 
           {/* 사용자 정보 및 마이페이지 버튼 */}
           <div className="flex items-center space-x-4">
-            {user.isLoggedIn ? (
-              <>
-                <div className="text-sm text-gray-700">
-                  <span className="font-medium">{user.username}</span>님
-                  환영합니다
-                </div>
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200">
-                  마이페이지
-                </button>
-              </>
-            ) : (
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200">
-                로그인
-              </button>
-            )}
+            <div className="text-sm text-gray-700">
+              <span className="font-medium">{user.username}</span>님 환영합니다
+            </div>
+            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+              마이페이지
+            </button>
           </div>
         </div>
       </div>
