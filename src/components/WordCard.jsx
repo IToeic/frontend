@@ -31,7 +31,7 @@ const WordCard = ({ words, setActiveSubTab, page }) => {
   return (
     <>
       {/* 단어 카드 */}
-      <div className="bg-white rounded-lg shadow-lg p-8 mb-6">
+      <div className="bg-white rounded-lg shadow-lg p-8 mb-6 select-none">
         {/* 상단 컨트롤 */}
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center space-x-4">
