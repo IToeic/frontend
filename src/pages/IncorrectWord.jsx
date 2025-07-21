@@ -1,7 +1,8 @@
 import { useState } from "react";
 import WordList from "../components/WordList";
 import myWordSample from "../mock/myWordSample";
-import MultipleChoiceTest from "../components/MultipleChoiceTest";
+import MultipleChoiceList from "../components/MultipleChoiceList";
+import AnswerFeedback from "../components/AnswerFeedback";
 
 const IncorrectWord = ({ setActiveSubTab }) => {
   const [words, setWords] = useState(myWordSample);
@@ -16,45 +17,25 @@ const IncorrectWord = ({ setActiveSubTab }) => {
   const HandleStudyClick = () => {
     setDoStudy(!doStudy);
   };
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
   const [currentIdx, setCurrentIdx] = useState(0);
-  const [userInput, setUserInput] = useState("");
   // test input 값
   let [inputFlag, setInputFlag] = useState(false);
   // flag 변수, 피드백 출력시 입력 불가
   const currentWord = words[currentIdx];
 
   const handleSubmit = (e, selectedAnswer, isAnswerCorrect) => {
-    //   e.preventDefault();
-    //   setInputFlag(true);
-    //   setIsCorrect(isAnswerCorrect);
-    //   setShowFeedback(true);
-    //   setTimeout(() => {
-    //     setShowFeedback(false);
-    //     if (isAnswerCorrect) {
-    //       const newQueue = words.filter((_, idx) => idx !== currentIdx);
-    //       if (newQueue.length === 0) {
-    //         setIsFinished(true);
-    //       } else {
-    //         setWords(newQueue);
-    //         setCurrentIdx(0);
-    //       }
-    //     } else {
-    //       // 오답인 경우 wrongCount 증가
-    //       // 오답인 경우 wrongCount 증가
-    //       const updatedTestWords = testWords.map((word) =>
-    //         word.id === currentWord.id
-    //           ? { ...word, wrongCount: word.wrongCount + 1 }
-    //           : word
-    //       );
-    //       // 현재 단어를 제외한 words + 현재 단어를 뒤에 추가
-    //       const newQueue = words.filter((_, idx) => idx !== currentIdx);
-    //       newQueue.push(currentWord); // 👈 현재 문제 단어를 뒤로 넣음
-    //       setTestWords(updatedTestWords);
-    //       setWords(newQueue);
-    //       setCurrentIdx(0); // 처음 문제부터 다시
-    //     }
-    //     setInputFlag(false);
-    //   }, 1500); // 1.5초 피드백 후 다음 문제 이동
+    e.preventDefault();
+    setInputFlag(true);
+    setIsCorrect(isAnswerCorrect);
+    setShowFeedback(true);
+    setTimeout(() => {
+      setShowFeedback(false);
+
+      setCurrentIdx((currentIdx + 1) % words.length);
+      setInputFlag(false);
+    }, 1500); // 1.5초 피드백 후 다음 문제 이동
   };
 
   return (
@@ -76,15 +57,31 @@ const IncorrectWord = ({ setActiveSubTab }) => {
             {doStudy ? "복습끝내기" : "복습하기"}
           </button>
         </div>
-
+        {showFeedback && <AnswerFeedback isCorrect={isCorrect} />}
         {doStudy ? (
-          // MultipleChoiceTest.jsx 띄워야 함
-          <MultipleChoiceTest
-            setUserInput={setUserInput}
-            currentWord={currentWord}
-            handleSubmit={handleSubmit}
-            inputFlag={inputFlag}
-          />
+          <div className="flex-1 flex flex-col items-center justify-center">
+            <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-xl">
+              <div className="flex justify-between items-center mb-20">
+                <span className="text-gray-700 font-semibold">
+                  Q{currentWord.id}. 다음 단어에 알맞은 뜻은?
+                </span>
+              </div>
+              <div className="mb-6 flex justify-center">
+                <h2 className="text-3xl font-bold text-gray-800 mb-14">
+                  {currentWord.word}
+                </h2>
+              </div>
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-col space-y-4 justify-center items-center"
+              ></form>
+              <MultipleChoiceList
+                currentWord={currentWord}
+                handleSubmit={handleSubmit}
+                inputFlag={inputFlag}
+              />
+            </div>
+          </div>
         ) : (
           <div className="w-full max-w-2xl bg-white rounded-xl shadow ml-[10%]">
             <div className="bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-700 flex justify-between">

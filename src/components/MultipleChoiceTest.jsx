@@ -1,11 +1,6 @@
 import MultipleChoiceList from "./MultipleChoiceList";
 
-const MultipleChoiceTest = ({
-  setUserInput,
-  currentWord,
-  handleSubmit,
-  inputFlag,
-}) => {
+const MultipleChoiceTest = ({ currentWord, handleSubmit, inputFlag }) => {
   return (
     <div className="flex-1 flex flex-col items-center justify-center">
       <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-xl">
@@ -26,7 +21,6 @@ const MultipleChoiceTest = ({
           <MultipleChoiceList
             currentWord={currentWord}
             handleSubmit={handleSubmit}
-            setUserInput={setUserInput}
             inputFlag={inputFlag}
           />
         </form>

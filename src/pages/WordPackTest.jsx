@@ -20,8 +20,6 @@ const WordPackTest = ({ dev }) => {
   // 문제 단어 목록
   const [currentIdx, setCurrentIdx] = useState(0);
   // 현재 문제 단어
-  const [userInput, setUserInput] = useState("");
-  // test input 값
   let [inputFlag, setInputFlag] = useState(false);
   // flag 변수, 피드백 출력시 입력 불가
   const currentWord = queue[currentIdx];
@@ -87,7 +85,6 @@ const WordPackTest = ({ dev }) => {
       </div>
       {showFeedback && <AnswerFeedback isCorrect={isCorrect} />}
       <MultipleChoiceTest
-        setUserInput={setUserInput}
         currentWord={currentWord}
         handleSubmit={handleSubmit}
         inputFlag={inputFlag}

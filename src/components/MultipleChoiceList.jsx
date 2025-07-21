@@ -1,12 +1,7 @@
 import { useState, useEffect } from "react";
 import wordPackSample from "../mock/wordPackSample";
 
-const MultipleChoiceList = ({
-  currentWord,
-  handleSubmit,
-  setUserInput,
-  inputFlag,
-}) => {
+const MultipleChoiceList = ({ currentWord, handleSubmit, inputFlag }) => {
   const [options, setOptions] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState("");
 

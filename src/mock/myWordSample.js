@@ -9,11 +9,11 @@ const myWordSample = [
   { id: 8, word: "banana", meaning: "바나나" },
   { id: 9, word: "orange", meaning: "오렌지" },
   { id: 10, word: "apple", meaning: "사과" },
-  { id: 12, word: "banana", meaning: "바나나" },
-  { id: 13, word: "orange", meaning: "오렌지" },
-  { id: 14, word: "apple", meaning: "사과" },
-  { id: 15, word: "banana", meaning: "바나나" },
-  { id: 16, word: "orange", meaning: "오렌지" },
+  { id: 11, word: "banana", meaning: "바나나" },
+  { id: 12, word: "orange", meaning: "오렌지" },
+  { id: 13, word: "apple", meaning: "사과" },
+  { id: 14, word: "banana", meaning: "바나나" },
+  { id: 15, word: "orange", meaning: "오렌지" },
 ];
 
 export default myWordSample;
