@@ -26,10 +26,10 @@ const Main = ({
 
   const emptyWordPack = wordPackChoiceCheck && selectedWordPack === 0;
 
-  const dev = false;
+  const dev = true;
 
   useEffect(() => {
-    const wordPackProgress = dev || 0;
+    const wordPackProgress = dev ? 1 : 0; //getActualProgress();
     //DB에서 추후에 가져와야 함
 
     // 워드팩이 선택되지 않았다면 return
@@ -38,7 +38,7 @@ const Main = ({
     }
 
     if (activeTab === "Test" && wordPackProgress !== 1) {
-      if (wordPackProgress > 0) {
+      if (wordPackProgress >= 0) {
         alert("현재 진행 중인 단어팩을 모두 마쳐야 테스트가 진행됩니다.⚠️");
         setActiveTab("");
         setActiveSubTab("");
