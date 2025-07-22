@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { SpeakerWaveIcon } from "@heroicons/react/24/outline";
 
 import FavoriteToggle from "../components/FavoriteToggle";
 
@@ -56,17 +57,19 @@ const WordCard = ({ words, setActiveSubTab, page }) => {
         </div>
 
         {/* 단어 내용 */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 items-center">
           <h2 className="text-4xl font-bold text-gray-800 mb-4">
             {currentWord.word}
           </h2>
 
-          <p
-            onClick={handlePlayPronunciation}
-            className="text-xs text-gray-600 mb-4 cursor-pointer hover:font-semibold"
-          >
-            [ 발음 ]
-          </p>
+          <div className="flex items-center justify-center mb-4">
+            <button
+              onClick={handlePlayPronunciation}
+              className="flex items-center justify-center gap-1 px-2 py-1 text-sm rounded hover:bg-blue-100 text-gray-600"
+            >
+              <SpeakerWaveIcon className="w-6 h-6" />
+            </button>
+          </div>
 
           {!isBlindMode && (
             <div className="space-y-4">
