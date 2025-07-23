@@ -25,7 +25,7 @@ const Login = ({ setIsLoggedIn }) => {
             placeholder="ID"
           />
         </div>
-        <div className="flex justify-center items-center ">
+        <div className="flex justify-center items-center">
           <input
             className="border px-7 py-5 text-lg w-[30%] mb-10 rounded-b-3xl focus:outline-none"
             placeholder="Password"
