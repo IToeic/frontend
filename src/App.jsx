@@ -3,7 +3,6 @@ import { useState } from "react";
 
 import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
-import MyPage from "./pages/MyPage";
 import Header from "./layouts/Header";
 import Menu from "./layouts/Menu";
 import Main from "./pages/Main";

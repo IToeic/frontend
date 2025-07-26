@@ -9,6 +9,7 @@ import WordPackTest from "./Test/WordPackTest";
 import virtualUser from "../mock/virtualUser";
 import WordPackChoice from "./WordPackChoice";
 import indexesWithWordPackChoice from "../constant/indexesWithWordPackChoice";
+import Footer from "../layouts/Footer";
 
 const Main = ({
   activeTab,
@@ -85,6 +86,7 @@ const Main = ({
     return (
       <div className="flex-1 p-8 bg-white">
         <MyPage />
+        <Footer />
       </div>
     );
   }
@@ -92,6 +94,7 @@ const Main = ({
   return (
     <div className="flex-1 p-8 bg-white">
       {tabComponents[activeTab]?.[activeSubTab] || <DashBoard />}
+      <Footer />
     </div>
   );
 };
