@@ -1,10 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const Header = ({ onLogoClick }) => {
+const Header = ({ onLogoClick, setActiveTab }) => {
+  const navigate = useNavigate();
   // 임시 사용자 데이터 (나중에 실제 로그인 상태와 연결)
   const user = {
     username: "사용자명",
     isLoggedIn: true,
+  };
+
+  const handleGoToMyPage = () => {
+    navigate("/mypage"); // ✅ 원하는 경로로 이동
   };
 
   return (
@@ -28,7 +34,10 @@ const Header = ({ onLogoClick }) => {
             <div className="text-sm text-gray-700">
               <span className="font-medium">{user.username}</span>님 환영합니다
             </div>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+            <button
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+              onClick={() => setActiveTab("MyPage")}
+            >
               마이페이지
             </button>
           </div>

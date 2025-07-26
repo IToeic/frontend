@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
+import MyPage from "./pages/MyPage";
 import Header from "./layouts/Header";
 import Menu from "./layouts/Menu";
 import Main from "./pages/Main";
@@ -43,7 +44,10 @@ function App() {
             path="/*"
             element={
               <div className="h-screen flex flex-col bg-gray-100">
-                <Header onLogoClick={handleLogoClick} />
+                <Header
+                  onLogoClick={handleLogoClick}
+                  setActiveTab={setActiveTab}
+                />
                 <div className="flex-1 flex">
                   <Menu
                     className="w-64 bg-white shadow"

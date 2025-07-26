@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import MyPage from "./MyPage";
 import WordStudy from "./Word/WordStudy";
 import WordTest from "./Word/WordTest";
 import MyWord from "./My/MyWord";
@@ -74,6 +75,16 @@ const Main = ({
     return (
       <div className="flex-1 p-8 bg-white">
         <WordPackChoice setSelectedWordPack={setSelectedWordPack} />
+      </div>
+    );
+  }
+
+  if (activeTab === "MyPage") {
+    setActiveSubTab(null);
+    setExpandedTab(null);
+    return (
+      <div className="flex-1 p-8 bg-white">
+        <MyPage />
       </div>
     );
   }
