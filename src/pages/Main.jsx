@@ -101,6 +101,7 @@ const Main = ({
         <DashBoard
           setActiveTab={setActiveTab}
           setActiveSubTab={setActiveSubTab}
+          setExpandedTab={setExpandedTab}
           selectedWordPack={selectedWordPack}
           setSelectedWordPack={setSelectedWordPack}
         />

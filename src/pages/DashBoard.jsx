@@ -6,6 +6,7 @@ import WordPackChoice from "./WordPackChoice";
 const DashBoard = ({
   setActiveTab,
   setActiveSubTab,
+  setExpandedTab,
   selectedWordPack,
   setSelectedWordPack,
 }) => {
@@ -16,6 +17,7 @@ const DashBoard = ({
   function handleGoWordStudy() {
     setActiveTab("Word");
     setActiveSubTab("Study");
+    setExpandedTab("Word");
   }
 
   function handleGoWordPackChoice() {
