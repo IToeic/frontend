@@ -1,7 +1,17 @@
 import React from "react";
 import wordPackChoice from "../mock/wordPackChoice";
 
-const WordPackChoice = ({ setSelectedWordPack }) => {
+const WordPackChoice = ({ selectedWordPack, setSelectedWordPack, onBack }) => {
+  function handleSelect(id) {
+    // eslint-disable-next-line no-restricted-globals
+    const check = confirm("해당 단어팩으로 수정하시겠습니까?");
+    if (check) {
+      setSelectedWordPack(id);
+      if (onBack) {
+        onBack?.();
+      }
+    }
+  }
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto">
@@ -14,8 +24,10 @@ const WordPackChoice = ({ setSelectedWordPack }) => {
           {wordPackChoice.map((pack) => (
             <div
               key={pack.id}
-              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer"
-              onClick={() => setSelectedWordPack(pack.id)}
+              className={`bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer ${
+                pack.id === selectedWordPack ? "border-2 border-blue-500" : ""
+              }`}
+              onClick={() => handleSelect(pack.id)}
             >
               <div className="mb-4">
                 <h3 className="text-xl font-bold text-gray-800 mb-2">

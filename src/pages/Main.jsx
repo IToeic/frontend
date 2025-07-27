@@ -75,7 +75,11 @@ const Main = ({
   if (emptyWordPack) {
     return (
       <div className="flex-1 p-8 bg-white">
-        <WordPackChoice setSelectedWordPack={setSelectedWordPack} />
+        <WordPackChoice
+          seletedWordPack={selectedWordPack}
+          setSelectedWordPack={setSelectedWordPack}
+          onBack={() => {}}
+        />
       </div>
     );
   }
@@ -93,7 +97,14 @@ const Main = ({
 
   return (
     <div className="flex-1 p-8 bg-white">
-      {tabComponents[activeTab]?.[activeSubTab] || <DashBoard />}
+      {tabComponents[activeTab]?.[activeSubTab] || (
+        <DashBoard
+          setActiveTab={setActiveTab}
+          setActiveSubTab={setActiveSubTab}
+          selectedWordPack={selectedWordPack}
+          setSelectedWordPack={setSelectedWordPack}
+        />
+      )}
       <Footer />
     </div>
   );
