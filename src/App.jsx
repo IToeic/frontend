@@ -46,6 +46,7 @@ function App() {
                 <Header
                   onLogoClick={handleLogoClick}
                   setActiveTab={setActiveTab}
+                  setIsLoggedIn={setIsLoggedIn}
                 />
                 <div className="flex-1 flex">
                   <Menu

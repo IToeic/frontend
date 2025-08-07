@@ -21,6 +21,10 @@ const Main = ({
   const [selectedWordPack, setSelectedWordPack] = useState(
     virtualUser[0].wordpackIng
   );
+  const [showPasswordCheck, setShowPasswordCheck] = useState(false);
+  const [passwordInput, setPasswordInput] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [myPageAllowed, setMyPageAllowed] = useState(false);
 
   const indexes = indexesWithWordPackChoice;
 
@@ -58,6 +62,40 @@ const Main = ({
     dev,
   ]);
 
+  // 마이페이지 진입 시 비밀번호 확인
+  useEffect(() => {
+    if (activeTab === "MyPage" && !myPageAllowed) {
+      setShowPasswordCheck(true);
+    } else {
+      setShowPasswordCheck(false);
+    }
+  }, [activeTab, myPageAllowed]);
+
+  // 마이페이지를 벗어나면 myPageAllowed false로 초기화
+  useEffect(() => {
+    if (activeTab !== "MyPage" && myPageAllowed) {
+      setMyPageAllowed(false);
+      setPasswordInput(null);
+    }
+  }, [activeTab, myPageAllowed, setPasswordInput]);
+
+  const handlePasswordCheck = (e) => {
+    e.preventDefault();
+    // 임시 비밀번호: test1234
+    if (passwordInput === "test1234") {
+      setMyPageAllowed(true);
+      setShowPasswordCheck(false);
+      setPasswordError("");
+    } else {
+      setMyPageAllowed(false);
+      setShowPasswordCheck(false);
+      setActiveTab(""); // 대시보드로
+      setPasswordError("");
+      setPasswordInput("");
+      alert("비밀번호가 올바르지 않습니다.");
+    }
+  };
+
   const tabComponents = {
     Word: {
       Study: <WordStudy setActiveSubTab={setActiveSubTab} />,
@@ -84,7 +122,39 @@ const Main = ({
     );
   }
 
-  if (activeTab === "MyPage") {
+  // 마이페이지 진입 시 비밀번호 확인 모달
+  if (activeTab === "MyPage" && !myPageAllowed) {
+    return (
+      <div className="flex-1 p-8 bg-white flex flex-col items-center justify-center min-h-[100%]">
+        <form
+          onSubmit={handlePasswordCheck}
+          className="bg-white border rounded-lg shadow-md p-8 flex flex-col items-center"
+        >
+          <label className="mb-4 text-lg font-semibold">
+            비밀번호를 입력하세요
+          </label>
+          <input
+            type="password"
+            className="border px-4 py-2 rounded w-64 mb-4 focus:outline-none"
+            value={passwordInput}
+            onChange={(e) => setPasswordInput(e.target.value)}
+            autoFocus
+          />
+          {passwordError && (
+            <span className="text-red-500 text-xs mb-2">{passwordError}</span>
+          )}
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded"
+          >
+            확인
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  if (activeTab === "MyPage" && myPageAllowed) {
     setActiveSubTab(null);
     setExpandedTab(null);
     return (

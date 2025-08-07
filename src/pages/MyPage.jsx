@@ -27,7 +27,7 @@ const MyPage = () => {
   };
 
   return (
-    <div className="p-20 max-w-2xl mx-auto">
+    <div className="p-20 max-w-2xl mx-auto min-h-[525px]">
       <h2 className="text-4xl font-bold text-blue-600 mb-10 text-center">
         My Page
       </h2>

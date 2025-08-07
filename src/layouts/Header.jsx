@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const Header = ({ onLogoClick, setActiveTab }) => {
+const Header = ({ onLogoClick, setActiveTab, setIsLoggedIn }) => {
   const navigate = useNavigate();
   // 임시 사용자 데이터 (나중에 실제 로그인 상태와 연결)
   const user = {
@@ -9,8 +9,10 @@ const Header = ({ onLogoClick, setActiveTab }) => {
     isLoggedIn: true,
   };
 
-  const handleGoToMyPage = () => {
-    navigate("/mypage"); // ✅ 원하는 경로로 이동
+  // 임시 로그아웃 함수
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    navigate("/login");
   };
 
   return (
@@ -29,7 +31,7 @@ const Header = ({ onLogoClick, setActiveTab }) => {
             </div>
           </div>
 
-          {/* 사용자 정보 및 마이페이지 버튼 */}
+          {/* 사용자 정보 및 마이페이지/로그아웃 버튼 */}
           <div className="flex items-center space-x-4">
             <div className="text-sm text-gray-700">
               <span className="font-medium">{user.username}</span>님 환영합니다
@@ -39,6 +41,12 @@ const Header = ({ onLogoClick, setActiveTab }) => {
               onClick={() => setActiveTab("MyPage")}
             >
               마이페이지
+            </button>
+            <button
+              className="bg-gray-600 hover:bg-gray-400 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+              onClick={handleLogout}
+            >
+              로그아웃
             </button>
           </div>
         </div>
