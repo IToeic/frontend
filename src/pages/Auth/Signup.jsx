@@ -1,23 +1,117 @@
 import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
+import { authServices } from "../../services/authServices";
+import { useState } from "react";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [isVerifyingCode, setIsVerifyingCode] = useState(false);
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
     setError,
-    clearErrors,
+    getValues,
   } = useForm();
 
-  const onSubmit = (data) => {
-    // 이메일 조합
-    const email = data.emailId + "@itc.ac.kr";
-    // 회원가입 처리 로직 (data.emailId 대신 email 사용)
-    // 예시: { ...data, email }
-    navigate("/login");
+  const onSubmit = async (data) => {
+    if (!emailVerified) {
+      setError("root", {
+        type: "manual",
+        message: "이메일 인증을 완료해주세요.",
+      });
+      return;
+    }
+
+    try {
+      // 이메일 조합
+      const email = data.emailId + "@itc.ac.kr";
+
+      const result = await authServices.signup(
+        data.userId,
+        data.password,
+        data.firstName,
+        data.lastName,
+        email
+      );
+
+      if (result.success) {
+        alert("회원가입이 완료되었습니다.");
+        navigate("/login");
+      } else {
+        setError("root", {
+          type: "manual",
+          message: result.message || "회원가입에 실패했습니다.",
+        });
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
+      setError("root", {
+        type: "manual",
+        message: "회원가입 처리 중 오류가 발생했습니다.",
+      });
+    }
+  };
+
+  const handleSendVerificationEmail = async () => {
+    const emailId = getValues("emailId");
+    if (!emailId) {
+      alert("이메일을 먼저 입력해주세요.");
+      return;
+    }
+
+    setIsSendingEmail(true);
+    try {
+      const email = emailId + "@itc.ac.kr";
+      const result = await authServices.sendVerificationEmail(email);
+
+      if (result.success) {
+        setEmailSent(true);
+        alert("인증 이메일이 발송되었습니다.");
+      } else {
+        alert(result.message || "이메일 발송에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("Send email error:", error);
+      alert("이메일 발송 중 오류가 발생했습니다.");
+    } finally {
+      setIsSendingEmail(false);
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    if (!verificationCode) {
+      alert("인증번호를 입력해주세요.");
+      return;
+    }
+
+    setIsVerifyingCode(true);
+    try {
+      const emailId = getValues("emailId");
+      const email = emailId + "@itc.ac.kr";
+      const result = await authServices.verifyEmailCode(
+        email,
+        verificationCode
+      );
+
+      if (result.success) {
+        setEmailVerified(true);
+        alert("이메일 인증이 완료되었습니다.");
+      } else {
+        alert(result.message || "인증번호가 올바르지 않습니다.");
+      }
+    } catch (error) {
+      console.error("Verify code error:", error);
+      alert("인증번호 확인 중 오류가 발생했습니다.");
+    } finally {
+      setIsVerifyingCode(false);
+    }
   };
 
   // 비밀번호 확인 값
@@ -36,6 +130,8 @@ const Signup = () => {
     passwordErrorMsg = errors.passwordCheck.message;
   } else if (errors.passwordCheck && errors.passwordCheck.type === "validate") {
     passwordErrorMsg = errors.passwordCheck.message;
+  } else if (errors.root) {
+    passwordErrorMsg = errors.root.message;
   }
 
   // 이름/이메일 중요도 순서 에러 메시지
@@ -146,6 +242,49 @@ const Signup = () => {
               </span>
             </div>
           </div>
+          {/* 이메일 인증 버튼 */}
+          <div className="flex justify-center items-center mt-2">
+            <button
+              type="button"
+              className={`text-sm px-4 py-2 rounded ${
+                emailVerified
+                  ? "text-gray-700 bg-gray-300 cursor-not-allowed"
+                  : "text-white bg-blue-500 hover:bg-blue-700"
+              }`}
+              disabled={emailVerified || isSendingEmail}
+              onClick={handleSendVerificationEmail}
+            >
+              {isSendingEmail
+                ? "발송 중..."
+                : emailVerified
+                ? "인증 완료"
+                : "인증"}
+            </button>
+          </div>
+
+          {/* 인증번호 입력 */}
+          {emailSent && !emailVerified && (
+            <div className="flex justify-center items-center mt-2">
+              <div className="flex w-[40%]">
+                <input
+                  type="text"
+                  className="border px-4 py-2 text-base rounded-l focus:outline-none w-full border-r-0"
+                  placeholder="인증번호 입력"
+                  value={verificationCode}
+                  onChange={(e) => setVerificationCode(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="text-sm px-4 py-2 rounded-r text-white bg-blue-500 hover:bg-blue-700"
+                  onClick={handleVerifyCode}
+                  disabled={isVerifyingCode}
+                >
+                  {isVerifyingCode ? "확인 중..." : "확인"}
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* 에러 메시지: 이메일 인풋 아래에만 중요도 순서로 하나만 표시 */}
           <div className="flex justify-center items-center ml-2 mt-2 mb-4 min-h-[20px]">
             {nameEmailErrorMsg && (
@@ -161,7 +300,7 @@ const Signup = () => {
           <button
             type="submit"
             className="w-full bg-blue-500 text-white px-4 py-3 rounded hover:bg-blue-700 mb-1 disabled:bg-blue-300 disabled:cursor-not-allowed"
-            disabled={isSubmitting}
+            disabled={isSubmitting || !emailVerified}
           >
             {isSubmitting ? "가입 중..." : "Sign up"}
           </button>

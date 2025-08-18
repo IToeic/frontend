@@ -4,12 +4,14 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 // Chart.js에 필요한 요소 등록
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const ProgressDoughnut = () => {
+const ProgressDoughnut = ({ completeCount, totalWords }) => {
+  const remainingCount = totalWords - completeCount;
+  
   const data = {
     labels: ["완료", "남은 것"],
     datasets: [
       {
-        data: [4, 1], // 학습한 개수 4, 남은 개수 1
+        data: [completeCount, remainingCount],
         backgroundColor: ["#3B82F6", "#E5E7EB"],
         borderWidth: 0,
       },

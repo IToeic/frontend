@@ -1,21 +1,70 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import WordList from "../../components/WordList";
-import myWordSample from "../../mock/myWordSample";
 import WordCard from "../../components/WordCard";
+import { wordServices } from "../../services/wordServices";
+import useUserStore from "../../stores/userStore";
 
 const MyWord = ({ setActiveSubTab }) => {
-  const [words, setWords] = useState(myWordSample);
+  const [words, setWords] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [doStudy, setDoStudy] = useState(false);
+  const { userId } = useUserStore();
+  const navigate = useNavigate();
 
-  const deleteWord = (id) => {
-    setWords(words.filter((w) => w.id !== id));
+  useEffect(() => {
+    const fetchMyWords = async () => {
+      if (!userId) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const wordData = await wordServices.getMyWords(userId);
+        setWords(wordData);
+      } catch (error) {
+        console.error("Failed to fetch my words:", error);
+        alert("내 단어장을 불러오는데 실패했습니다.");
+        navigate("/");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMyWords();
+  }, [userId]);
+
+  const deleteWord = async (wordId) => {
+    if (!userId) {
+      alert("사용자 정보가 없습니다.");
+      return;
+    }
+
+    try {
+      await wordServices.removeFromMyWords(userId, wordId);
+      setWords(words.filter((w) => w.wordId !== wordId));
+    } catch (error) {
+      console.error("Failed to delete word:", error);
+      alert("단어 삭제에 실패했습니다.");
+      navigate("/");
+    }
   };
-  //삭제 기능 나중에 db 연결 후 다시 구현
-
-  let [doStudy, setDoStudy] = useState(false);
 
   const HandleStudyClick = () => {
     setDoStudy(!doStudy);
   };
+
+  if (loading) {
+    return (
+      <div className="relative bg-gray-50 p-6">
+        <div className="max-w-4xl mx-auto mb-8">
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">My Words</h1>
+          <p className="text-gray-600">내 단어장</p>
+          <div className="text-center">로딩 중...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative bg-gray-50 p-6">
@@ -49,9 +98,10 @@ const MyWord = ({ setActiveSubTab }) => {
               <div className="w-[20%] text-right">삭제</div>
             </div>
             <div className="flex flex-col divide-y">
-              {words.map(({ id, word, meaning }) => (
+              {words.map(({ wordId, word, meaning }) => (
                 <WordList
-                  id={id}
+                  key={wordId}
+                  id={wordId}
                   word={word}
                   meaning={meaning}
                   deleteWord={deleteWord}

@@ -1,18 +1,28 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { authServices } from "../services/authServices";
+import useUserStore from "../stores/userStore";
 
-const Header = ({ onLogoClick, setActiveTab, setIsLoggedIn }) => {
+const Header = ({ onLogoClick, setActiveTab, onLogout, user }) => {
   const navigate = useNavigate();
-  // 임시 사용자 데이터 (나중에 실제 로그인 상태와 연결)
-  const user = {
-    username: "사용자명",
-    isLoggedIn: true,
-  };
+  const { logout } = useUserStore();
 
-  // 임시 로그아웃 함수
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    navigate("/login");
+  // 로그아웃 함수
+  const handleLogout = async () => {
+    try {
+      const result = await authServices.logout();
+
+      if (result) {
+        logout(); // Zustand 스토어의 logout 사용
+        navigate("/login");
+      } else {
+        alert("로그아웃에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+      alert("로그아웃 처리 중 오류가 발생했습니다.");
+      navigate("/");
+    }
   };
 
   return (
@@ -34,7 +44,8 @@ const Header = ({ onLogoClick, setActiveTab, setIsLoggedIn }) => {
           {/* 사용자 정보 및 마이페이지/로그아웃 버튼 */}
           <div className="flex items-center space-x-4">
             <div className="text-sm text-gray-700">
-              <span className="font-medium">{user.username}</span>님 환영합니다
+              <span className="font-medium">{user?.username || "사용자"}</span>
+              님 환영합니다
             </div>
             <button
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"

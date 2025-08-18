@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { SpeakerWaveIcon } from "@heroicons/react/24/outline";
 
 import FavoriteToggle from "../components/FavoriteToggle";
+import useUserStore from "../stores/userStore";
+import { wordServices } from "../services/wordServices";
 
 const WordCard = ({ words, setActiveSubTab, page }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -9,6 +12,8 @@ const WordCard = ({ words, setActiveSubTab, page }) => {
   const currentWord = words[currentIndex];
 
   const [favorites, setFavorites] = useState(words.filter((w) => w.isFavorite));
+  const { userId } = useUserStore();
+  const navigate = useNavigate();
 
   const len = words.length;
 
@@ -28,7 +33,23 @@ const WordCard = ({ words, setActiveSubTab, page }) => {
   };
 
   //발음 재생
-  const handlePlayPronunciation = () => {};
+  const handlePlayPronunciation = async () => {
+    try {
+      const audioBlob = await wordServices.getTTSAudio(currentWord.word);
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.play();
+
+      // 메모리 정리
+      audio.onended = () => {
+        URL.revokeObjectURL(audioUrl);
+      };
+    } catch (error) {
+      console.error("Failed to play pronunciation:", error);
+      alert("발음을 재생할 수 없습니다.");
+      navigate("/");
+    }
+  };
   return (
     <>
       {/* 단어 카드 */}
@@ -50,9 +71,10 @@ const WordCard = ({ words, setActiveSubTab, page }) => {
           </div>
 
           <FavoriteToggle
-            wordId={currentWord.id}
+            wordId={currentWord.wordId}
             favorites={favorites}
             setFavorites={setFavorites}
+            userId={userId}
           />
         </div>
 
@@ -149,4 +171,5 @@ const WordCard = ({ words, setActiveSubTab, page }) => {
     </>
   );
 };
+
 export default WordCard;

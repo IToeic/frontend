@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import ProgressDoughnut from "../components/ProgressDoughnut";
 import quotes from "../mock/quotes";
 import WordPackChoice from "./WordPackChoice";
+import { wordServices } from "../services/wordServices";
+import useUserStore from "../stores/userStore";
 
 const DashBoard = ({
   setActiveTab,
@@ -11,8 +14,34 @@ const DashBoard = ({
   setSelectedWordPack,
 }) => {
   let [goWordPackChoice, setGoWordPackChoice] = useState(false);
+  const [progressData, setProgressData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const randomNum = Math.floor(Math.random() * quotes.length);
   const quote = quotes[randomNum];
+  const { userId } = useUserStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProgress = async () => {
+      if (!userId) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const progress = await wordServices.getWordpackProgress(userId);
+        setProgressData(progress);
+      } catch (error) {
+        console.error("Failed to fetch progress:", error);
+        alert("진행도를 불러오는데 실패했습니다.");
+        navigate("/");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProgress();
+  }, [userId]);
 
   function handleGoWordStudy() {
     setActiveTab("Word");
@@ -24,6 +53,20 @@ const DashBoard = ({
     setGoWordPackChoice(true);
   }
 
+  // 현재 선택된 단어팩의 진행도 찾기
+  const currentProgress = progressData?.find(
+    (pack) => pack.wordpackId === selectedWordPack
+  );
+
+  if (loading) {
+    return (
+      <div className="flex-1 p-8 bg-white">
+        <h1 className="text-4xl font-bold mb-6">DashBoard</h1>
+        <div className="text-center">로딩 중...</div>
+      </div>
+    );
+  }
+
   return (
     <>
       {goWordPackChoice && (
@@ -33,7 +76,7 @@ const DashBoard = ({
           onBack={() => setGoWordPackChoice(false)}
         />
       )}
-      <div className="flex-1 bg-white p-10">
+      <div className="flex-1 p-8 bg-white">
         {/* 타이틀 */}
         <h1 className="text-4xl font-bold mb-6">DashBoard</h1>
 
@@ -42,7 +85,10 @@ const DashBoard = ({
           <span role="img" aria-label="folder">
             📁
           </span>
-          진행중인 단어팩: <span className="font-semibold">초급 어쩌구</span>
+          진행중인 단어팩:{" "}
+          <span className="font-semibold">
+            {currentProgress?.name || "선택되지 않음"}
+          </span>
           <button
             className="bg-blue-600 text-white px-2 py-1 ml-3 rounded hover:bg-blue-700 text-sm"
             onClick={handleGoWordPackChoice}
@@ -59,21 +105,35 @@ const DashBoard = ({
             {/* 왼쪽 원형 차트 & 숫자 */}
             <div className="text-center">
               <div className="text-center">
-                <ProgressDoughnut />
-                <p className="font-semibold text-sm mt-2">4 / 5</p>
+                <ProgressDoughnut
+                  completeCount={currentProgress?.completeCount || 0}
+                  totalWords={currentProgress?.totalWords || 0}
+                />
+                <p className="font-semibold text-sm mt-2">
+                  {currentProgress?.completeCount || 0} /{" "}
+                  {currentProgress?.totalWords || 0}
+                </p>
               </div>
             </div>
 
             {/* 오른쪽 텍스트 */}
             <div className="flex-1 space-y-1 text-sm ml-10">
               <p>
-                📌 오늘 배운 단어: <span className="font-semibold">4개</span>
+                📌 오늘 배운 단어:{" "}
+                <span className="font-semibold">
+                  {currentProgress?.learningCount || 0}개
+                </span>
               </p>
               <p>
                 ❌ 틀린 단어: <span className="font-semibold">1개</span>
               </p>
               <p>
-                🔵 다음 단어 <span className="font-semibold">1개</span>{" "}
+                🔵 다음 단어{" "}
+                <span className="font-semibold">
+                  {currentProgress?.totalWords -
+                    currentProgress?.completeCount || 0}
+                  개
+                </span>{" "}
                 남았어요!
               </p>
               <button

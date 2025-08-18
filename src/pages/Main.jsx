@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import MyPage from "./MyPage";
 import WordStudy from "./Word/WordStudy";
 import WordTest from "./Word/WordTest";
@@ -10,6 +11,7 @@ import virtualUser from "../mock/virtualUser";
 import WordPackChoice from "./WordPackChoice";
 import indexesWithWordPackChoice from "../constant/indexesWithWordPackChoice";
 import Footer from "../layouts/Footer";
+import { userServices } from "../services/userServices";
 
 const Main = ({
   activeTab,
@@ -33,6 +35,7 @@ const Main = ({
   const emptyWordPack = wordPackChoiceCheck && selectedWordPack === 0;
 
   const dev = false;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const wordPackProgress = dev ? 1 : 0; //getActualProgress();
@@ -75,34 +78,48 @@ const Main = ({
   useEffect(() => {
     if (activeTab !== "MyPage" && myPageAllowed) {
       setMyPageAllowed(false);
-      setPasswordInput(null);
-    }
-  }, [activeTab, myPageAllowed, setPasswordInput]);
-
-  const handlePasswordCheck = (e) => {
-    e.preventDefault();
-    // 임시 비밀번호: test1234
-    if (passwordInput === "test1234") {
-      setMyPageAllowed(true);
-      setShowPasswordCheck(false);
-      setPasswordError("");
-    } else {
-      setMyPageAllowed(false);
-      setShowPasswordCheck(false);
-      setActiveTab(""); // 대시보드로
-      setPasswordError("");
       setPasswordInput("");
-      alert("비밀번호가 올바르지 않습니다.");
+    }
+  }, [activeTab, myPageAllowed]);
+
+  const handlePasswordCheck = async (e) => {
+    e.preventDefault();
+
+    try {
+      const result = await userServices.verifyMyPageAccess(passwordInput);
+
+      if (result.success) {
+        setMyPageAllowed(true);
+        setShowPasswordCheck(false);
+        setPasswordError("");
+        setPasswordInput("");
+      } else {
+        setMyPageAllowed(false);
+        setShowPasswordCheck(false);
+        setActiveTab(""); // 대시보드로
+        setPasswordError("");
+        setPasswordInput("");
+        alert(result.message || "비밀번호가 올바르지 않습니다.");
+      }
+    } catch (error) {
+      console.error("MyPage verification error:", error);
+      alert("마이페이지 접근 확인 중 오류가 발생했습니다.");
+      navigate("/");
     }
   };
 
   const tabComponents = {
     Word: {
-      Study: <WordStudy setActiveSubTab={setActiveSubTab} />,
-      TodayTest: <WordTest />,
+      Study: (
+        <WordStudy
+          setActiveSubTab={setActiveSubTab}
+          selectedWordPack={selectedWordPack}
+        />
+      ),
+      TodayTest: <WordTest selectedWordPack={selectedWordPack} />,
     },
     Test: {
-      Test: <WordPackTest dev={dev} />,
+      Test: <WordPackTest dev={dev} selectedWordPack={selectedWordPack} />,
     },
     My: {
       MyWord: <MyWord setActiveSubTab={setActiveSubTab} />,

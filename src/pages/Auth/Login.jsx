@@ -1,18 +1,36 @@
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { authServices } from "../../services/authServices";
 
-const Login = ({ setIsLoggedIn }) => {
+const Login = ({ onLogin }) => {
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    getValues,
+    setError,
   } = useForm();
 
-  const onSubmit = (data) => {
-    setIsLoggedIn(true);
-    navigate("/");
+  const onSubmit = async (data) => {
+    try {
+      const result = await authServices.login(data.id, data.password);
+
+      if (result.success) {
+        onLogin(result.data); // 사용자 정보를 부모 컴포넌트로 전달
+        navigate("/");
+      } else {
+        setError("root", {
+          type: "manual",
+          message: result.message || "로그인에 실패했습니다.",
+        });
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("root", {
+        type: "manual",
+        message: "로그인 처리 중 오류가 발생했습니다.",
+      });
+    }
   };
 
   const handleSignupPage = () => {
@@ -21,10 +39,12 @@ const Login = ({ setIsLoggedIn }) => {
 
   // 에러 메시지 조건 분기
   let passwordErrorMsg = "";
-  if (errors.id && errors.password) {
+  if (errors.id) {
     passwordErrorMsg = errors.id.message;
-  } else if (!errors.id && errors.password) {
+  } else if (errors.password) {
     passwordErrorMsg = errors.password.message;
+  } else if (errors.root) {
+    passwordErrorMsg = errors.root.message;
   }
 
   return (

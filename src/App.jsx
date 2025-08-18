@@ -6,11 +6,12 @@ import Signup from "./pages/Auth/Signup";
 import Header from "./layouts/Header";
 import Menu from "./layouts/Menu";
 import Main from "./pages/Main";
+import useUserStore from "./stores/userStore";
 
 import "./App.css";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn, userId, username, login, logout } = useUserStore();
 
   // 탭 상태
   const [activeTab, setActiveTab] = useState();
@@ -29,10 +30,7 @@ function App() {
         {/* 로그인 안 된 상태 */}
         {!isLoggedIn ? (
           <>
-            <Route
-              path="/login"
-              element={<Login setIsLoggedIn={setIsLoggedIn} />}
-            />
+            <Route path="/login" element={<Login onLogin={login} />} />
             <Route path="/signup" element={<Signup />} />
             {/* 로그인 안했으면 무조건 /login으로 리디렉트 */}
             <Route path="*" element={<Navigate to="/login" replace />} />
@@ -46,7 +44,8 @@ function App() {
                 <Header
                   onLogoClick={handleLogoClick}
                   setActiveTab={setActiveTab}
-                  setIsLoggedIn={setIsLoggedIn}
+                  onLogout={logout}
+                  user={{ username }}
                 />
                 <div className="flex-1 flex">
                   <Menu
