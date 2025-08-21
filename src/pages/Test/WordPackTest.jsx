@@ -28,7 +28,7 @@ const WordPackTest = ({ dev, selectedWordPack }) => {
       if (!selectedWordPack) return;
 
       try {
-        const wordData = await wordServices.getDailyWords(selectedWordPack);
+        const wordData = await wordServices.getAllWords(selectedWordPack);
         const wordsWithWrongCount = wordData.map((word) => ({
           ...word,
           wrongCount: 0,

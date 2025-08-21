@@ -9,6 +9,14 @@ export const wordServices = {
     return response.data;
   },
 
+  // 단어팩 전체 단어 출력 API (객관식 테스트용)
+  getAllWords: async (wordpackId) => {
+    const response = await apiClient.get(
+      `/api/words/all?wordpackId=${wordpackId}`
+    );
+    return response.data;
+  },
+
   // 학습 진행도 API
   getWordpackProgress: async (userId) => {
     const response = await apiClient.get(
@@ -97,12 +105,6 @@ export const wordServices = {
     const response = await apiClient.get(`/api/tts/${word}`, {
       responseType: "blob", // 음성 파일을 blob으로 받기
     });
-    return response.data;
-  },
-
-  // 단어 테스트 결과 저장 (기존)
-  saveTestResult: async (testData) => {
-    const response = await apiClient.post("/api/words/test-result", testData);
     return response.data;
   },
 };

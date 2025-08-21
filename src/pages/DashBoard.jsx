@@ -15,6 +15,9 @@ const DashBoard = ({
 }) => {
   let [goWordPackChoice, setGoWordPackChoice] = useState(false);
   const [progressData, setProgressData] = useState(null);
+  const [myWordsCount, setMyWordsCount] = useState(0);
+  const [incorrectWordsCount, setIncorrectWordsCount] = useState(0);
+  const [todayWordsCount, setTodayWordsCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const randomNum = Math.floor(Math.random() * quotes.length);
   const quote = quotes[randomNum];
@@ -22,26 +25,47 @@ const DashBoard = ({
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchProgress = async () => {
+    const fetchDashboardData = async () => {
       if (!userId) {
         setLoading(false);
         return;
       }
 
       try {
-        const progress = await wordServices.getWordpackProgress(userId);
+        // 병렬로 여러 API 호출
+        const [progress, myWords, incorrectWords] = await Promise.all([
+          wordServices.getWordpackProgress(userId),
+          wordServices.getMyWords(userId),
+          wordServices.getIncorrectWords(userId),
+        ]);
+
         setProgressData(progress);
+        setMyWordsCount(myWords.length);
+        setIncorrectWordsCount(incorrectWords.length);
+
+        // 현재 선택된 단어팩의 오늘 단어 개수 가져오기
+        if (selectedWordPack) {
+          try {
+            const todayWords = await wordServices.getDailyWords(
+              selectedWordPack
+            );
+            setTodayWordsCount(todayWords.length);
+          } catch (error) {
+            console.error("Failed to fetch today words:", error);
+            setTodayWordsCount(0);
+          }
+        }
       } catch (error) {
-        console.error("Failed to fetch progress:", error);
-        alert("진행도를 불러오는데 실패했습니다.");
+        console.error("Failed to fetch dashboard data:", error);
+        alert("대시보드 데이터를 불러오는데 실패했습니다.");
         navigate("/");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProgress();
-  }, [userId]);
+    fetchDashboardData();
+  }, [userId, selectedWordPack]);
 
   function handleGoWordStudy() {
     setActiveTab("Word");
@@ -125,7 +149,8 @@ const DashBoard = ({
                 </span>
               </p>
               <p>
-                ❌ 틀린 단어: <span className="font-semibold">1개</span>
+                ❌ 틀린 단어:{" "}
+                <span className="font-semibold">{incorrectWordsCount}개</span>
               </p>
               <p>
                 🔵 다음 단어{" "}
@@ -148,10 +173,29 @@ const DashBoard = ({
 
         {/* 하단 카드 영역 */}
         <div className="flex gap-6 mt-10">
-          <div className="bg-gray-200 w-40 h-40 flex items-center justify-center text-center text-gray-700 shadow-sm">
-            인공이..?
+          {/* 내 단어장 카드 */}
+          <div className="bg-blue-50 w-40 h-40 flex flex-col items-center justify-center text-center text-blue-700 shadow-sm rounded-lg border border-blue-200">
+            <div className="text-3xl mb-2">📚</div>
+            <div className="text-2xl font-bold">{myWordsCount}</div>
+            <div className="text-sm">내 단어장</div>
           </div>
-          <div className="bg-gray-100 rounded-xl px-6 py-8 text-center text-lg shadow">
+
+          {/* 오늘의 단어 카드 */}
+          <div className="bg-green-50 w-40 h-40 flex flex-col items-center justify-center text-center text-green-700 shadow-sm rounded-lg border border-green-200">
+            <div className="text-3xl mb-2">📅</div>
+            <div className="text-2xl font-bold">{todayWordsCount}</div>
+            <div className="text-sm">오늘의 단어</div>
+          </div>
+
+          {/* 틀린 단어 카드 */}
+          <div className="bg-red-50 w-40 h-40 flex flex-col items-center justify-center text-center text-red-700 shadow-sm rounded-lg border border-red-200">
+            <div className="text-3xl mb-2">❌</div>
+            <div className="text-2xl font-bold">{incorrectWordsCount}</div>
+            <div className="text-sm">틀린 단어</div>
+          </div>
+
+          {/* 명언 카드 */}
+          <div className="bg-gray-100 rounded-xl px-6 py-8 text-center text-lg shadow flex-1">
             {quote.text}
           </div>
         </div>
