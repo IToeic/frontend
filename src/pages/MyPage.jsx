@@ -1,13 +1,71 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { userServices } from "../services/userServices";
+import { useNavigate } from "react-router-dom";
 
 const MyPage = () => {
   const [editing, setEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    id: "toeic_user1",
-    email: "user@school.edu",
-    name: "John Doe",
+    id: "",
+    email: "",
+    name: "",
     password: "",
   });
+
+  // MyPage 정보 불러오기
+  useEffect(() => {
+    const fetchMyPageInfo = async () => {
+      try {
+        const result = await userServices.getMyPageInfo();
+        console.log("MyPage API response:", result);
+        
+        if (result.success) {
+          // Mock 응답에서는 최상위 레벨에 데이터가 있음
+          setFormData({
+            id: result.userId || result.data?.userId || "user123",
+            email: result.email || result.data?.email || "user@example.com",
+            name: result.name || result.data?.name || "홍길동",
+            password: "",
+          });
+          setError(null);
+        } else if (result.error === 'UNAUTHORIZED') {
+          // 세션이 만료되었거나 로그인이 필요함
+          console.error('로그인이 필요합니다:', result.message);
+          setError('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+          // 3초 후 로그인 페이지로 리다이렉트
+          setTimeout(() => {
+            navigate('/login');
+          }, 3000);
+        } else {
+          console.warn("MyPage API response is not successful:", result.message);
+          setError(result.message || '마이페이지 정보를 불러오는데 실패했습니다.');
+          // 기본값 사용
+          setFormData({
+            id: "user123",
+            email: "user@example.com",
+            name: "홍길동",
+            password: "",
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch MyPage info:", error);
+        setError('마이페이지 정보를 불러오는데 실패했습니다.');
+        // 에러 시 기본값 사용
+        setFormData({
+          id: "user123",
+          email: "user@example.com",
+          name: "홍길동",
+          password: "",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMyPageInfo();
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

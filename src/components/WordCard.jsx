@@ -71,7 +71,7 @@ const WordCard = ({ words, setActiveSubTab, page }) => {
           </div>
 
           <FavoriteToggle
-            wordId={currentWord.wordId}
+            wordId={currentWord?.wordId}
             favorites={favorites}
             setFavorites={setFavorites}
             userId={userId}

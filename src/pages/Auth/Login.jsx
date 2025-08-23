@@ -16,7 +16,7 @@ const Login = ({ onLogin }) => {
       const result = await authServices.login(data.id, data.password);
 
       if (result.success) {
-        onLogin(result.data); // 사용자 정보를 부모 컴포넌트로 전달
+        onLogin(result); // 전체 응답을 전달
         navigate("/");
       } else {
         setError("root", {

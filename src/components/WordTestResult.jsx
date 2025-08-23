@@ -23,6 +23,7 @@ const WordTestResult = ({ dev, testWords }) => {
           <div className="flex flex-col">
             {testWords.map((word) => (
               <TestResultList
+                key={word.wordId || word.id || word.word}
                 dev={dev}
                 word={word}
                 favorites={favorites}

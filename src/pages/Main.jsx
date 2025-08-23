@@ -12,6 +12,8 @@ import WordPackChoice from "./WordPackChoice";
 import indexesWithWordPackChoice from "../constant/indexesWithWordPackChoice";
 import Footer from "../layouts/Footer";
 import { userServices } from "../services/userServices";
+import { wordServices } from "../services/wordServices";
+import useUserStore from "../stores/userStore";
 
 const Main = ({
   activeTab,
@@ -27,6 +29,8 @@ const Main = ({
   const [passwordInput, setPasswordInput] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [myPageAllowed, setMyPageAllowed] = useState(false);
+  const [wordPackProgress, setWordPackProgress] = useState(0);
+  const { userId } = useUserStore();
 
   const indexes = indexesWithWordPackChoice;
 
@@ -37,10 +41,38 @@ const Main = ({
   const dev = false;
   const navigate = useNavigate();
 
+  // 단어팩 진행도 가져오기
   useEffect(() => {
-    const wordPackProgress = dev ? 1 : 0; //getActualProgress();
-    //DB에서 추후에 가져와야 함
+    const fetchWordPackProgress = async () => {
+      if (!userId || !selectedWordPack) {
+        setWordPackProgress(0);
+        return;
+      }
 
+      try {
+        const progressData = await wordServices.getWordpackProgress(userId);
+        const currentProgress = progressData?.find(
+          (pack) => pack.wordpackId === selectedWordPack
+        );
+        
+        if (currentProgress) {
+          // 50/50이면 진행도 1로 설정 (완료로 간주)
+          const progress = currentProgress.completeCount >= currentProgress.totalWords ? 1 : 0;
+          setWordPackProgress(progress);
+          console.log('단어팩 진행도:', currentProgress.completeCount, '/', currentProgress.totalWords, '=', progress);
+        } else {
+          setWordPackProgress(0);
+        }
+      } catch (error) {
+        console.error("Failed to fetch wordpack progress:", error);
+        setWordPackProgress(0);
+      }
+    };
+
+    fetchWordPackProgress();
+  }, [userId, selectedWordPack]);
+
+  useEffect(() => {
     // 워드팩이 선택되지 않았다면 return
     if (emptyWordPack) {
       return;
@@ -62,7 +94,7 @@ const Main = ({
     emptyWordPack,
     setActiveTab,
     setActiveSubTab,
-    dev,
+    wordPackProgress,
   ]);
 
   // 마이페이지 진입 시 비밀번호 확인
@@ -81,6 +113,14 @@ const Main = ({
       setPasswordInput("");
     }
   }, [activeTab, myPageAllowed]);
+
+  // 마이페이지에 진입하면 탭 상태 초기화
+  useEffect(() => {
+    if (activeTab === "MyPage" && myPageAllowed) {
+      setActiveSubTab(null);
+      setExpandedTab(null);
+    }
+  }, [activeTab, myPageAllowed, setActiveSubTab, setExpandedTab]);
 
   const handlePasswordCheck = async (e) => {
     e.preventDefault();
@@ -103,8 +143,14 @@ const Main = ({
       }
     } catch (error) {
       console.error("MyPage verification error:", error);
-      alert("마이페이지 접근 확인 중 오류가 발생했습니다.");
-      navigate("/");
+      
+      if (error.response?.status === 401) {
+        alert("비밀번호가 올바르지 않습니다.");
+        setPasswordError("비밀번호를 다시 확인해주세요.");
+      } else {
+        alert("마이페이지 접근 확인 중 오류가 발생했습니다.");
+        navigate("/");
+      }
     }
   };
 
@@ -172,8 +218,6 @@ const Main = ({
   }
 
   if (activeTab === "MyPage" && myPageAllowed) {
-    setActiveSubTab(null);
-    setExpandedTab(null);
     return (
       <div className="flex-1 p-8 bg-white">
         <MyPage />
