@@ -19,16 +19,55 @@ const Login = ({ onLogin }) => {
         onLogin(result); // 전체 응답을 전달
         navigate("/");
       } else {
+        // 서버에서 반환하는 구체적인 오류 메시지 처리
+        let errorMessage = "로그인에 실패했습니다.";
+
+        if (result.message) {
+          // 서버 응답에 따른 세분화된 오류 메시지/ 추후에 연결 후 오류 확인하고 해당 부분 삭제
+          if (result.message.includes("존재하지 않습니다")) {
+            errorMessage = "존재하지 않는 아이디입니다.";
+          } else if (result.message.includes("비밀번호")) {
+            errorMessage = "비밀번호가 올바르지 않습니다.";
+          } else if (result.message.includes("인증")) {
+            errorMessage = "이메일 인증이 필요합니다.";
+          } else if (result.message.includes("차단")) {
+            errorMessage = "계정이 일시적으로 차단되었습니다.";
+          } else {
+            errorMessage = result.message;
+          }
+        }
+
         setError("root", {
           type: "manual",
-          message: result.message || "로그인에 실패했습니다.",
+          message: errorMessage,
         });
       }
     } catch (error) {
       console.error("Login error:", error);
+
+      // 네트워크 오류 등에 따른 세분화된 메시지
+      let errorMessage = "로그인 처리 중 오류가 발생했습니다.";
+
+      if (error.response) {
+        // 서버 응답이 있는 경우
+        const status = error.response.status;
+        if (status === 401) {
+          errorMessage = "아이디 또는 비밀번호가 올바르지 않습니다.";
+        } else if (status === 403) {
+          errorMessage = "접근이 거부되었습니다.";
+        } else if (status === 404) {
+          errorMessage = "서비스를 찾을 수 없습니다.";
+        } else if (status === 500) {
+          errorMessage = "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+        }
+      } else if (error.request) {
+        // 네트워크 오류
+        errorMessage = "네트워크 연결을 확인해주세요.";
+      }
+
       setError("root", {
         type: "manual",
-        message: "로그인 처리 중 오류가 발생했습니다.",
+        message: errorMessage,
       });
     }
   };

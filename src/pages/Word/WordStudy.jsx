@@ -1,33 +1,20 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import WordCard from "../../components/WordCard";
-import { wordServices } from "../../services/wordServices";
-import useUserStore from "../../stores/userStore";
+import useWordStore from "../../stores/wordStore";
 
 const WordStudy = ({ setActiveSubTab, selectedWordPack }) => {
-  const [words, setWords] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const { userId } = useUserStore();
   const navigate = useNavigate();
+  const { dailyWords: words, loading, error, fetchDailyWords } = useWordStore();
 
   useEffect(() => {
-    const fetchWords = async () => {
-      try {
-        const wordData = await wordServices.getDailyWords(selectedWordPack);
-        setWords(wordData);
-      } catch (error) {
-        console.error("Failed to fetch words:", error);
+    if (selectedWordPack) {
+      fetchDailyWords(selectedWordPack).catch((error) => {
         alert("오늘의 단어를 불러오는데 실패했습니다.");
         navigate("/");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (selectedWordPack) {
-      fetchWords();
+      });
     }
-  }, [selectedWordPack]);
+  }, [selectedWordPack, fetchDailyWords, navigate]);
 
   if (loading) {
     return (

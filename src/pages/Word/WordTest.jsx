@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import WordTestResult from "../../components/WordTestResult";
 import AnswerFeedback from "../../components/AnswerFeedback";
 import SubjectiveTest from "../../components/SubjectiveTest";
-import { wordServices } from "../../services/wordServices";
 import useUserStore from "../../stores/userStore";
+import useWordStore from "../../stores/wordStore";
 
 const WordTest = ({ selectedWordPack }) => {
   const dev = false;
@@ -24,14 +24,17 @@ const WordTest = ({ selectedWordPack }) => {
   // flag 변수, 피드백 출력시 입력 불가
   const currentWord = queue[currentIdx];
   const { userId } = useUserStore();
+  const { dailyWords, fetchDailyWords } = useWordStore();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchWords = async () => {
+    const setupTestWords = async () => {
       if (!selectedWordPack) return;
 
       try {
-        const wordData = await wordServices.getDailyWords(selectedWordPack);
+        // wordStore에서 단어 가져옴
+        let wordData = dailyWords;
+
         const wordsWithWrongCount = wordData.map((word) => ({
           ...word,
           wrongCount: 0,
@@ -45,8 +48,8 @@ const WordTest = ({ selectedWordPack }) => {
       }
     };
 
-    fetchWords();
-  }, [selectedWordPack]);
+    setupTestWords();
+  }, [selectedWordPack, dailyWords, fetchDailyWords, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -94,6 +97,7 @@ const WordTest = ({ selectedWordPack }) => {
   const handleTestComplete = async () => {
     try {
       // Daily 테스트 결과 저장
+      const { wordServices } = await import("../../services/wordServices");
       await wordServices.saveDailyTestResult(userId, testWords);
       setIsFinished(true);
     } catch (error) {
