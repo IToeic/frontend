@@ -70,12 +70,14 @@ const WordCard = ({ words, setActiveSubTab, page }) => {
             </label>
           </div>
 
-          <FavoriteToggle
-            wordId={currentWord?.wordId}
-            favorites={favorites}
-            setFavorites={setFavorites}
-            userId={userId}
-          />
+          {page !== "MyWord" && (
+            <FavoriteToggle
+              wordId={currentWord?.wordId}
+              favorites={favorites}
+              setFavorites={setFavorites}
+              userId={userId}
+            />
+          )}
         </div>
 
         {/* 단어 내용 */}

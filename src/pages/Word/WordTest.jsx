@@ -43,7 +43,9 @@ const WordTest = ({ selectedWordPack }) => {
         setQueue(wordData);
       } catch (error) {
         console.error("Failed to fetch words:", error);
-        alert("테스트 단어를 불러오는데 실패했습니다.");
+        const errorMessage =
+          error.userMessage || "테스트 단어를 불러오는데 실패했습니다.";
+        alert(errorMessage);
         navigate("/");
       }
     };
@@ -102,7 +104,9 @@ const WordTest = ({ selectedWordPack }) => {
       setIsFinished(true);
     } catch (error) {
       console.error("Failed to save test result:", error);
-      alert("테스트 결과 저장에 실패했습니다.");
+      const errorMessage =
+        error.userMessage || "테스트 결과 저장에 실패했습니다.";
+      alert(errorMessage);
       navigate("/");
     }
   };

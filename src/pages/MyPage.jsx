@@ -6,6 +6,10 @@ const MyPage = () => {
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [verifying, setVerifying] = useState(false);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     id: "",
@@ -20,7 +24,7 @@ const MyPage = () => {
       try {
         const result = await userServices.getMyPageInfo();
         console.log("MyPage API response:", result);
-        
+
         if (result.success) {
           // Mock 응답에서는 최상위 레벨에 데이터가 있음
           setFormData({
@@ -30,17 +34,22 @@ const MyPage = () => {
             password: "",
           });
           setError(null);
-        } else if (result.error === 'UNAUTHORIZED') {
+        } else if (result.error === "UNAUTHORIZED") {
           // 세션이 만료되었거나 로그인이 필요함
-          console.error('로그인이 필요합니다:', result.message);
-          setError('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+          console.error("로그인이 필요합니다:", result.message);
+          setError("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
           // 3초 후 로그인 페이지로 리다이렉트
           setTimeout(() => {
-            navigate('/login');
+            navigate("/login");
           }, 3000);
         } else {
-          console.warn("MyPage API response is not successful:", result.message);
-          setError(result.message || '마이페이지 정보를 불러오는데 실패했습니다.');
+          console.warn(
+            "MyPage API response is not successful:",
+            result.message
+          );
+          setError(
+            result.message || "마이페이지 정보를 불러오는데 실패했습니다."
+          );
           // 기본값 사용
           setFormData({
             id: "user123",
@@ -51,7 +60,9 @@ const MyPage = () => {
         }
       } catch (error) {
         console.error("Failed to fetch MyPage info:", error);
-        setError('마이페이지 정보를 불러오는데 실패했습니다.');
+        const errorMessage =
+          error.userMessage || "마이페이지 정보를 불러오는데 실패했습니다.";
+        setError(errorMessage);
         // 에러 시 기본값 사용
         setFormData({
           id: "user123",
@@ -67,6 +78,42 @@ const MyPage = () => {
     fetchMyPageInfo();
   }, [navigate]);
 
+  // 비밀번호 확인 모달 표시
+  const handleShowPasswordModal = () => {
+    setShowPasswordModal(true);
+    setPassword("");
+    setPasswordError("");
+  };
+
+  // 비밀번호 확인 처리
+  const handlePasswordVerification = async () => {
+    if (!password.trim()) {
+      setPasswordError("비밀번호를 입력해주세요.");
+      return;
+    }
+
+    setVerifying(true);
+    setPasswordError("");
+
+    try {
+      const result = await userServices.verifyMyPageAccess(password);
+
+      if (result.success) {
+        setShowPasswordModal(false);
+        setEditing(true);
+      } else {
+        setPasswordError(result.message || "비밀번호가 올바르지 않습니다.");
+      }
+    } catch (error) {
+      console.error("Password verification error:", error);
+      const errorMessage =
+        error.userMessage || "마이페이지 접근 확인 중 오류가 발생했습니다.";
+      setPasswordError(errorMessage);
+    } finally {
+      setVerifying(false);
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -76,7 +123,7 @@ const MyPage = () => {
   };
 
   const handleEdit = () => {
-    setEditing(true);
+    handleShowPasswordModal();
   };
 
   const handleSave = () => {
@@ -160,6 +207,53 @@ const MyPage = () => {
           )}
         </div>
       </div>
+
+      {/* 비밀번호 확인 모달 */}
+      {showPasswordModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 w-96">
+            <h3 className="text-xl font-bold mb-4 text-center">
+              비밀번호 확인
+            </h3>
+            <p className="text-gray-600 mb-4 text-center">
+              마이페이지 수정을 위해 비밀번호를 입력해주세요.
+            </p>
+
+            <div className="mb-4">
+              <input
+                type="password"
+                className="w-full border px-4 py-2 rounded focus:outline-none"
+                placeholder="비밀번호 입력"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyPress={(e) =>
+                  e.key === "Enter" && handlePasswordVerification()
+                }
+              />
+              {passwordError && (
+                <p className="text-red-500 text-sm mt-2">{passwordError}</p>
+              )}
+            </div>
+
+            <div className="flex justify-end space-x-3">
+              <button
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+                onClick={() => setShowPasswordModal(false)}
+                disabled={verifying}
+              >
+                취소
+              </button>
+              <button
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-blue-300"
+                onClick={handlePasswordVerification}
+                disabled={verifying}
+              >
+                {verifying ? "확인 중..." : "확인"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

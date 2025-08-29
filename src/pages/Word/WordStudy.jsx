@@ -10,7 +10,9 @@ const WordStudy = ({ setActiveSubTab, selectedWordPack }) => {
   useEffect(() => {
     if (selectedWordPack) {
       fetchDailyWords(selectedWordPack).catch((error) => {
-        alert("오늘의 단어를 불러오는데 실패했습니다.");
+        const errorMessage =
+          error.userMessage || "오늘의 단어를 불러오는데 실패했습니다.";
+        alert(errorMessage);
         navigate("/");
       });
     }

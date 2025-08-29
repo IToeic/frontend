@@ -45,25 +45,9 @@ const Login = ({ onLogin }) => {
     } catch (error) {
       console.error("Login error:", error);
 
-      // 네트워크 오류 등에 따른 세분화된 메시지
-      let errorMessage = "로그인 처리 중 오류가 발생했습니다.";
-
-      if (error.response) {
-        // 서버 응답이 있는 경우
-        const status = error.response.status;
-        if (status === 401) {
-          errorMessage = "아이디 또는 비밀번호가 올바르지 않습니다.";
-        } else if (status === 403) {
-          errorMessage = "접근이 거부되었습니다.";
-        } else if (status === 404) {
-          errorMessage = "서비스를 찾을 수 없습니다.";
-        } else if (status === 500) {
-          errorMessage = "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
-        }
-      } else if (error.request) {
-        // 네트워크 오류
-        errorMessage = "네트워크 연결을 확인해주세요.";
-      }
+      // API 인터셉터에서 설정한 사용자 친화적인 메시지 사용
+      const errorMessage =
+        error.userMessage || "로그인 처리 중 오류가 발생했습니다.";
 
       setError("root", {
         type: "manual",

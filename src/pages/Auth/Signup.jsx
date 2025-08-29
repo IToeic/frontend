@@ -73,23 +73,9 @@ const Signup = () => {
     } catch (error) {
       console.error("Signup error:", error);
 
-      // 네트워크 오류 등에 따른 세분화된 메시지
-      let errorMessage = "회원가입 처리 중 오류가 발생했습니다.";
-
-      if (error.response) {
-        // 서버 응답이 있는 경우
-        const status = error.response.status;
-        if (status === 400) {
-          errorMessage = "입력 정보를 확인해주세요.";
-        } else if (status === 409) {
-          errorMessage = "이미 존재하는 계정입니다.";
-        } else if (status === 500) {
-          errorMessage = "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
-        }
-      } else if (error.request) {
-        // 네트워크 오류
-        errorMessage = "네트워크 연결을 확인해주세요.";
-      }
+      // API 인터셉터에서 설정한 사용자 친화적인 메시지 사용
+      const errorMessage =
+        error.userMessage || "회원가입 처리 중 오류가 발생했습니다.";
 
       setError("root", {
         type: "manual",
@@ -134,22 +120,9 @@ const Signup = () => {
     } catch (error) {
       console.error("Send email error:", error);
 
-      // 네트워크 오류 등에 따른 세분화된 메시지
-      let errorMessage = "이메일 발송 중 오류가 발생했습니다.";
-
-      if (error.response) {
-        const status = error.response.status;
-        if (status === 400) {
-          errorMessage = "이메일 형식을 확인해주세요.";
-        } else if (status === 429) {
-          errorMessage =
-            "너무 많은 요청이 발생했습니다. 잠시 후 다시 시도해주세요.";
-        } else if (status === 500) {
-          errorMessage = "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
-        }
-      } else if (error.request) {
-        errorMessage = "네트워크 연결을 확인해주세요.";
-      }
+      // API 인터셉터에서 설정한 사용자 친화적인 메시지 사용
+      const errorMessage =
+        error.userMessage || "이메일 발송 중 오류가 발생했습니다.";
 
       alert(errorMessage);
     } finally {
@@ -196,21 +169,8 @@ const Signup = () => {
     } catch (error) {
       console.error("Verify code error:", error);
 
-      // 네트워크 오류 등에 따른 세분화된 메시지
-      let errorMessage = "인증번호 확인 중 오류가 발생했습니다.";
-
-      if (error.response) {
-        const status = error.response.status;
-        if (status === 400) {
-          errorMessage = "인증번호를 올바르게 입력해주세요.";
-        } else if (status === 404) {
-          errorMessage = "인증번호를 찾을 수 없습니다. 다시 발송해주세요.";
-        } else if (status === 500) {
-          errorMessage = "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
-        }
-      } else if (error.request) {
-        errorMessage = "네트워크 연결을 확인해주세요.";
-      }
+      const errorMessage =
+        error.userMessage || "인증번호 확인 중 오류가 발생했습니다.";
 
       alert(errorMessage);
     } finally {

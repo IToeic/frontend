@@ -18,7 +18,7 @@ const useWordStore = create((set, get) => ({
     } catch (error) {
       console.error("Failed to fetch daily words:", error);
       set({
-        error: error.message,
+        error: error.userMessage || error.message,
         loading: false,
       });
       throw error;
