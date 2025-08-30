@@ -9,11 +9,33 @@ import { wordServices } from "../services/wordServices";
 const WordCard = ({ words, setActiveSubTab, page }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isBlindMode, setIsBlindMode] = useState(false);
-  const currentWord = words[currentIndex];
-
-  const [favorites, setFavorites] = useState(words.filter((w) => w.isFavorite));
+  const [favorites, setFavorites] = useState(words?.filter((w) => w.isFavorite) || []);
   const { userId } = useUserStore();
   const navigate = useNavigate();
+  
+  // words가 없거나 비어있는 경우 처리
+  if (!words || words.length === 0) {
+    return (
+      <div className="bg-white rounded-lg shadow-lg p-8 mb-6">
+        <div className="text-center">
+          <p className="text-gray-600">단어를 불러오는 중입니다...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  const currentWord = words[currentIndex];
+  
+  // currentWord가 undefined인 경우 처리
+  if (!currentWord) {
+    return (
+      <div className="bg-white rounded-lg shadow-lg p-8 mb-6">
+        <div className="text-center">
+          <p className="text-gray-600">단어 정보를 불러올 수 없습니다.</p>
+        </div>
+      </div>
+    );
+  }
 
   const len = words.length;
 
