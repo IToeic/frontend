@@ -61,13 +61,6 @@ const MyPage = () => {
             setError(
               result.message || "마이페이지 정보를 불러오는데 실패했습니다."
             );
-            // API 실패 시 현재 로그인된 사용자 정보 사용
-            setFormData({
-              id: userId,
-              email: "",
-              name: username,
-              password: "",
-            });
           }
         }
       } catch (error) {
@@ -84,13 +77,6 @@ const MyPage = () => {
           const errorMessage =
             error.userMessage || "마이페이지 정보를 불러오는데 실패했습니다.";
           setError(errorMessage);
-          // 에러 시 현재 로그인된 사용자 정보 사용
-          setFormData({
-            id: userId,
-            email: "",
-            name: username,
-            password: "",
-          });
         }
       } finally {
         setLoading(false);

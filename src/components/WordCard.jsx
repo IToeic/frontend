@@ -1,18 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SpeakerWaveIcon } from "@heroicons/react/24/outline";
 
 import FavoriteToggle from "../components/FavoriteToggle";
-import useUserStore from "../stores/userStore";
 import { wordServices } from "../services/wordServices";
 
 const WordCard = ({ words, setActiveSubTab, page }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isBlindMode, setIsBlindMode] = useState(false);
-  const [favorites, setFavorites] = useState(
-    words?.filter((w) => w.isFavorite) || []
-  );
-  const { userId } = useUserStore();
+
   const navigate = useNavigate();
 
   // words가 없거나 비어있는 경우 처리
@@ -104,14 +100,7 @@ const WordCard = ({ words, setActiveSubTab, page }) => {
             </label>
           </div>
 
-          {page !== "MyWord" && (
-            <FavoriteToggle
-              wordId={currentWord?.wordId}
-              favorites={favorites}
-              setFavorites={setFavorites}
-              userId={userId}
-            />
-          )}
+          {page !== "MyWord" && <FavoriteToggle wordId={currentWord?.wordId} />}
         </div>
 
         {/* 단어 내용 */}

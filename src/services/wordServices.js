@@ -61,6 +61,14 @@ export const wordServices = {
     return response.data;
   },
 
+  // 내 단어장에서 여러 단어 삭제
+  deleteMyWords: async (userId, wordIds) => {
+    const response = await apiClient.delete("/api/user-words/bulk", {
+      data: { userId, wordIds },
+    });
+    return response.data;
+  },
+
   // 틀린 단어 관련 (새로운 API 구조)
   getIncorrectWords: async (userId) => {
     const response = await apiClient.get(`/api/incorrect-words/user/${userId}`);
@@ -71,6 +79,14 @@ export const wordServices = {
     const response = await apiClient.delete(
       `/api/incorrect-words/${incorrectWordId}`
     );
+    return response.data;
+  },
+
+  // 틀린 단어에서 여러 단어 삭제
+  deleteIncorrectWords: async (userId, incorrectWordIds) => {
+    const response = await apiClient.delete("/api/incorrect-words/bulk", {
+      data: { userId, incorrectWordIds },
+    });
     return response.data;
   },
 

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import MenuItems from "../constant/index";
+import useUserStore from "../stores/userStore";
 
 const Menu = ({
   activeTab,
@@ -10,9 +11,11 @@ const Menu = ({
   setExpandedTab,
 }) => {
   const [hoveredTab, setHoveredTab] = useState(null);
+  const { isLoggedIn } = useUserStore();
   //마우스를 올린 탭
 
   const handleTabClick = (tabName) => {
+    if (!isLoggedIn) return; // 로그인되지 않은 상태에서는 클릭 무시
     setActiveTab(tabName);
     setExpandedTab(tabName);
     const subTab = MenuItems[tabName].subTabs[0].id;
