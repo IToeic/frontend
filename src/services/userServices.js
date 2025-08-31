@@ -17,12 +17,6 @@ export const userServices = {
         config: error.config,
       });
 
-      // 임시: 테스트용 비밀번호로 접근 허용
-      if (password === "Password12#" || password === "test") {
-        console.warn("Mock MyPage verification - 테스트용 비밀번호 사용");
-        return { success: true, message: "인증 성공" };
-      }
-
       throw error;
     }
   },
@@ -37,6 +31,7 @@ export const userServices = {
         data: error.response?.data,
         message: error.message,
       });
+      throw error; // 에러를 다시 throw하여 컴포넌트에서 처리할 수 있도록 함
     }
   },
 
@@ -54,13 +49,7 @@ export const userServices = {
         data: error.response?.data,
         message: error.message,
       });
-
-      // 임시: Mock 응답
-      console.warn("Mock profile update - 테스트용 응답");
-      return {
-        success: true,
-        message: "프로필이 성공적으로 수정되었습니다.",
-      };
+      throw error; // 에러를 다시 throw하여 컴포넌트에서 처리할 수 있도록 함
     }
   },
 };

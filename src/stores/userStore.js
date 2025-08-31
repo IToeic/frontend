@@ -1,15 +1,15 @@
 import { create } from "zustand";
 
-const useUserStore = create((set) => ({
+const useUserStore = create((set, get) => ({
   // 사용자 정보 - 세션에서 초기값 가져오기
-  userId: sessionStorage.getItem('userId') || null,
-  username: sessionStorage.getItem('username') || null,
-  isLoggedIn: !!sessionStorage.getItem('userId'),
+  userId: sessionStorage.getItem("userId") || null,
+  username: sessionStorage.getItem("username") || null,
+  isLoggedIn: !!sessionStorage.getItem("userId"),
 
   // 로그인
   login: (userData) => {
-    sessionStorage.setItem('userId', userData.userId);
-    sessionStorage.setItem('username', userData.name || userData.userId);
+    sessionStorage.setItem("userId", userData.userId);
+    sessionStorage.setItem("username", userData.name || userData.userId);
     set({
       userId: userData.userId,
       username: userData.name || userData.userId,
@@ -19,8 +19,8 @@ const useUserStore = create((set) => ({
 
   // 로그아웃
   logout: () => {
-    sessionStorage.removeItem('userId');
-    sessionStorage.removeItem('username');
+    sessionStorage.removeItem("userId");
+    sessionStorage.removeItem("username");
     set({
       userId: null,
       username: null,
@@ -31,15 +31,25 @@ const useUserStore = create((set) => ({
   // 사용자 정보 업데이트
   updateUser: (userData) => {
     if (userData.userId) {
-      sessionStorage.setItem('userId', userData.userId);
+      sessionStorage.setItem("userId", userData.userId);
     }
     if (userData.username) {
-      sessionStorage.setItem('username', userData.username);
+      sessionStorage.setItem("username", userData.username);
     }
     set((state) => ({
       ...state,
       ...userData,
     }));
+  },
+
+  // 세션 만료 처리
+  handleSessionExpired: () => {
+    console.log("세션이 만료되었습니다. 자동 로그아웃 처리합니다.");
+    console.log("현재 세션 상태:", {
+      userId: sessionStorage.getItem("userId"),
+      username: sessionStorage.getItem("username"),
+    });
+    get().logout();
   },
 }));
 

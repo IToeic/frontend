@@ -37,30 +37,54 @@ const MyPage = () => {
         console.log("MyPage API response:", result);
 
         if (result.success) {
-          // API에서 받은 데이터 사용
           setFormData({
-            id: result.userId || result.data?.userId || userId,
-            email: result.email || result.data?.email || "",
-            name: result.name || result.data?.name || username,
+            id: result.userId || userId,
+            email: result.email || "",
+            name: result.name || username,
             password: "",
           });
           setError(null);
-        } else if (result.error === "UNAUTHORIZED") {
-          // 세션이 만료되었거나 로그인이 필요함
-          console.error("로그인이 필요합니다:", result.message);
-          setError("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
-          setTimeout(() => {
-            navigate("/login");
-          }, 2000);
         } else {
           console.warn(
             "MyPage API response is not successful:",
             result.message
           );
-          setError(
-            result.message || "마이페이지 정보를 불러오는데 실패했습니다."
-          );
-          // API 실패 시 현재 로그인된 사용자 정보 사용
+
+          // 로그인이 필요한 경우 자동 로그아웃 처리
+          if (result.message === "로그인이 필요합니다.") {
+            setError("세션이 만료되었습니다. 자동으로 로그아웃됩니다.");
+            setTimeout(() => {
+              const { logout } = useUserStore.getState();
+              logout();
+            }, 2000);
+          } else {
+            setError(
+              result.message || "마이페이지 정보를 불러오는데 실패했습니다."
+            );
+            // API 실패 시 현재 로그인된 사용자 정보 사용
+            setFormData({
+              id: userId,
+              email: "",
+              name: username,
+              password: "",
+            });
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch MyPage info:", error);
+
+        // 401 에러인 경우 자동 로그아웃 처리
+        if (error.status === 401) {
+          setError("세션이 만료되었습니다. 자동으로 로그아웃됩니다.");
+          setTimeout(() => {
+            const { logout } = useUserStore.getState();
+            logout();
+          }, 2000);
+        } else {
+          const errorMessage =
+            error.userMessage || "마이페이지 정보를 불러오는데 실패했습니다.";
+          setError(errorMessage);
+          // 에러 시 현재 로그인된 사용자 정보 사용
           setFormData({
             id: userId,
             email: "",
@@ -68,18 +92,6 @@ const MyPage = () => {
             password: "",
           });
         }
-      } catch (error) {
-        console.error("Failed to fetch MyPage info:", error);
-        const errorMessage =
-          error.userMessage || "마이페이지 정보를 불러오는데 실패했습니다.";
-        setError(errorMessage);
-        // 에러 시 현재 로그인된 사용자 정보 사용
-        setFormData({
-          id: userId,
-          email: "",
-          name: username,
-          password: "",
-        });
       } finally {
         setLoading(false);
       }
@@ -165,15 +177,9 @@ const MyPage = () => {
         <div className="bg-white shadow-md rounded-2xl p-8 space-y-6 border border-gray-200">
           <div className="text-center py-8">
             <div className="text-red-600 mb-4">{error}</div>
-            <button
-              onClick={() => {
-                navigate("/login");
-                logout();
-              }}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              로그인 페이지로 이동
-            </button>
+            <div className="text-gray-600 text-sm">
+              잠시 후 자동으로 로그아웃됩니다.
+            </div>
           </div>
         </div>
       </div>

@@ -68,6 +68,24 @@ apiClient.interceptors.response.use(
       error.userMessage = serverMessage || getErrorMessage(status);
       error.status = status;
 
+      // 401 에러 시 세션 만료 처리
+      if (status === 401) {
+        console.log("401 에러 상세:", {
+          status: status,
+          message: serverMessage,
+          data: error.response?.data,
+        });
+        // userStore의 handleSessionExpired 호출
+        import("../stores/userStore")
+          .then(({ useUserStore }) => {
+            const userStore = useUserStore.getState();
+            userStore.handleSessionExpired();
+          })
+          .catch((importError) => {
+            console.error("Failed to import userStore:", importError);
+          });
+      }
+
       // 404 에러는 백엔드가 준비되지 않은 경우이므로 조용히 처리
       if (status === 404) {
         console.log("API 엔드포인트가 준비되지 않았습니다:", error.config?.url);

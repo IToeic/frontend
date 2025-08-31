@@ -44,7 +44,6 @@ function App() {
                 <Header
                   onLogoClick={handleLogoClick}
                   setActiveTab={setActiveTab}
-                  onLogout={logout}
                   user={{ username }}
                 />
                 <div className="flex-1 flex">

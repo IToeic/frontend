@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { authServices } from "../services/authServices";
 import useUserStore from "../stores/userStore";
 
-const Header = ({ onLogoClick, setActiveTab, onLogout, user }) => {
+const Header = ({ onLogoClick, setActiveTab, user }) => {
   const navigate = useNavigate();
   const { logout } = useUserStore();
 
@@ -27,7 +27,7 @@ const Header = ({ onLogoClick, setActiveTab, onLogout, user }) => {
 
   return (
     <header className="bg-white shadow-md border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className=" mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* 로고 영역 */}
           <div className="flex items-center">
