@@ -7,10 +7,11 @@ const MyPage = () => {
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(true);
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [verifying, setVerifying] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
   const { userId, username } = useUserStore();
   const [formData, setFormData] = useState({
@@ -50,34 +51,16 @@ const MyPage = () => {
             result.message
           );
 
-          // 로그인이 필요한 경우 자동 로그아웃 처리
-          if (result.message === "로그인이 필요합니다.") {
-            setError("세션이 만료되었습니다. 자동으로 로그아웃됩니다.");
-            setTimeout(() => {
-              const { logout } = useUserStore.getState();
-              logout();
-            }, 2000);
-          } else {
-            setError(
-              result.message || "마이페이지 정보를 불러오는데 실패했습니다."
-            );
-          }
+          setError(
+            result.message || "마이페이지 정보를 불러오는데 실패했습니다."
+          );
         }
       } catch (error) {
         console.error("Failed to fetch MyPage info:", error);
 
-        // 401 에러인 경우 자동 로그아웃 처리
-        if (error.status === 401) {
-          setError("세션이 만료되었습니다. 자동으로 로그아웃됩니다.");
-          setTimeout(() => {
-            const { logout } = useUserStore.getState();
-            logout();
-          }, 2000);
-        } else {
-          const errorMessage =
-            error.userMessage || "마이페이지 정보를 불러오는데 실패했습니다.";
-          setError(errorMessage);
-        }
+        const errorMessage =
+          error.userMessage || "마이페이지 정보를 불러오는데 실패했습니다.";
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -85,6 +68,27 @@ const MyPage = () => {
 
     fetchMyPageInfo();
   }, [userId, username, navigate]);
+
+  // 로그아웃 시 상태 초기화
+  useEffect(() => {
+    const handleLogout = () => {
+      setShowPasswordModal(false);
+      setEditing(false);
+      setPassword("");
+      setPasswordError("");
+      setFormData({
+        id: "",
+        email: "",
+        name: "",
+        password: "",
+      });
+      setError(null);
+      setLoading(false);
+    };
+
+    window.addEventListener("userLogout", handleLogout);
+    return () => window.removeEventListener("userLogout", handleLogout);
+  }, []);
 
   // 비밀번호 확인 모달 표시
   const handleShowPasswordModal = () => {
@@ -164,7 +168,7 @@ const MyPage = () => {
           <div className="text-center py-8">
             <div className="text-red-600 mb-4">{error}</div>
             <div className="text-gray-600 text-sm">
-              잠시 후 자동으로 로그아웃됩니다.
+              마이페이지 정보를 불러올 수 없습니다.
             </div>
           </div>
         </div>
@@ -266,7 +270,10 @@ const MyPage = () => {
                 className="w-full border px-4 py-2 rounded focus:outline-none"
                 placeholder="비밀번호 입력"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  console.log(password);
+                }}
                 onKeyPress={(e) =>
                   e.key === "Enter" && handlePasswordVerification()
                 }

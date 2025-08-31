@@ -26,6 +26,19 @@ const useUserStore = create((set, get) => ({
       username: null,
       isLoggedIn: false,
     });
+
+    // wordStore 초기화
+    import("./wordStore")
+      .then(({ default: useWordStore }) => {
+        const wordStore = useWordStore.getState();
+        wordStore.resetOnLogout();
+      })
+      .catch((error) => {
+        console.error("Failed to reset wordStore:", error);
+      });
+
+    // 전역 상태 초기화를 위한 이벤트 발생
+    window.dispatchEvent(new CustomEvent("userLogout"));
   },
 
   // 사용자 정보 업데이트

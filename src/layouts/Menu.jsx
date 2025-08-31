@@ -23,6 +23,7 @@ const Menu = ({
   };
 
   const handleSubTabClick = (subTabId) => {
+    if (!isLoggedIn) return; // 로그인되지 않은 상태에서는 클릭 무시
     const tabName = Object.keys(MenuItems).find((tabName) =>
       MenuItems[tabName].subTabs.some((subTab) => subTab.id === subTabId)
     );
@@ -38,11 +39,14 @@ const Menu = ({
           {Object.keys(MenuItems).map((tabName) => (
             <div key={tabName} className="relative">
               <button
-                onMouseEnter={() => setHoveredTab(tabName)}
+                onMouseEnter={() => isLoggedIn && setHoveredTab(tabName)}
                 onMouseLeave={() => setHoveredTab(null)}
                 onClick={() => handleTabClick(tabName)}
+                disabled={!isLoggedIn}
                 className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                  activeTab === tabName
+                  !isLoggedIn
+                    ? "text-gray-400 cursor-not-allowed bg-gray-50"
+                    : activeTab === tabName
                     ? "bg-blue-100 text-blue-700 border-l-4 border-blue-600"
                     : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                 }`}
@@ -53,11 +57,12 @@ const Menu = ({
               {/* 서브탭 */}
               <div
                 className={`w-full bg-white border-l-4 border-blue-200 shadow-sm overflow-hidden transition-all duration-300 ease-in-out ${
-                  hoveredTab === tabName || expandedTab === tabName
+                  (hoveredTab === tabName || expandedTab === tabName) &&
+                  isLoggedIn
                     ? "max-h-96 opacity-100"
                     : "max-h-0 opacity-0"
                 }`}
-                onMouseEnter={() => setHoveredTab(tabName)}
+                onMouseEnter={() => isLoggedIn && setHoveredTab(tabName)}
                 onMouseLeave={() => setHoveredTab(null)}
               >
                 <div className="p-2 space-y-1">
@@ -65,8 +70,11 @@ const Menu = ({
                     <button
                       key={subTab.id}
                       onClick={() => handleSubTabClick(subTab.id)}
+                      disabled={!isLoggedIn}
                       className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors duration-200 ${
-                        activeSubTab === subTab.id
+                        !isLoggedIn
+                          ? "text-gray-400 cursor-not-allowed bg-gray-50"
+                          : activeSubTab === subTab.id
                           ? "bg-blue-50 text-blue-700 border-l-2 border-blue-600"
                           : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                       }`}

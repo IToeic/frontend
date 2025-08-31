@@ -65,6 +65,11 @@ const useWordStore = create((set, get) => ({
     set({ dailyWords: [], loading: false, error: null, lastFetchDate: null });
   },
 
+  // 로그아웃 시 상태 초기화
+  resetOnLogout: () => {
+    set({ dailyWords: [], loading: false, error: null, lastFetchDate: null });
+  },
+
   getDailyWords: () => {
     return get().dailyWords;
   },
