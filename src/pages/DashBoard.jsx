@@ -44,10 +44,11 @@ const DashBoard = ({
         setIncorrectWordsCount(incorrectWords.length);
 
         // 현재 선택된 단어팩의 오늘 단어 개수 가져오기
-        if (selectedWordPack) {
+        if (selectedWordPack && userId) {
           try {
             const todayWords = await wordServices.getDailyWords(
-              selectedWordPack
+              selectedWordPack,
+              userId
             );
             setTodayWordsCount(todayWords.length);
           } catch (error) {

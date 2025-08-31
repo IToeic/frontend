@@ -12,7 +12,7 @@ const WordStudy = ({ setActiveSubTab, selectedWordPack }) => {
   useEffect(() => {
     // 로그인된 사용자이고 단어팩이 선택된 경우에만 API 호출
     if (userId && selectedWordPack) {
-      fetchDailyWords(selectedWordPack).catch((error) => {
+      fetchDailyWords(selectedWordPack, userId).catch((error) => {
         const errorMessage =
           error.userMessage || "오늘의 단어를 불러오는데 실패했습니다.";
         alert(errorMessage);
@@ -23,7 +23,7 @@ const WordStudy = ({ setActiveSubTab, selectedWordPack }) => {
       alert("로그인이 필요합니다.");
       navigate("/login");
     }
-  }, [userId, selectedWordPack, fetchDailyWords, navigate]);
+  }, [userId, selectedWordPack]);
 
   if (!userId) {
     return (

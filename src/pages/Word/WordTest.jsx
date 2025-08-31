@@ -29,11 +29,16 @@ const WordTest = ({ selectedWordPack }) => {
 
   useEffect(() => {
     const setupTestWords = async () => {
-      if (!selectedWordPack) return;
+      if (!selectedWordPack || !userId) return;
 
       try {
-        // wordStore에서 단어 가져옴
+        // wordStore에서 단어 가져옴 (없으면 새로 생성)
         let wordData = dailyWords;
+
+        // dailyWords가 비어있으면 새로 가져오기
+        if (!wordData || wordData.length === 0) {
+          wordData = await fetchDailyWords(selectedWordPack, userId);
+        }
 
         const wordsWithWrongCount = wordData.map((word) => ({
           ...word,
@@ -51,7 +56,7 @@ const WordTest = ({ selectedWordPack }) => {
     };
 
     setupTestWords();
-  }, [selectedWordPack, dailyWords, fetchDailyWords, navigate]);
+  }, [selectedWordPack, userId]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -105,7 +110,7 @@ const WordTest = ({ selectedWordPack }) => {
     try {
       // Daily 테스트 결과 저장
       const { wordServices } = await import("../../services/wordServices");
-      await wordServices.saveDailyTestResult(userId, testWords);
+      await wordServices.saveDailyTestResult(testWords);
       setIsFinished(true);
     } catch (error) {
       console.error("Failed to save test result:", error);

@@ -4,12 +4,14 @@ import { SpeakerWaveIcon } from "@heroicons/react/24/outline";
 
 import FavoriteToggle from "../components/FavoriteToggle";
 import { wordServices } from "../services/wordServices";
+import useUserStore from "../stores/userStore";
 
 const WordCard = ({ words, setActiveSubTab, page }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isBlindMode, setIsBlindMode] = useState(false);
 
   const navigate = useNavigate();
+  const { userId } = useUserStore();
 
   // words가 없거나 비어있는 경우 처리
   if (!words || words.length === 0) {

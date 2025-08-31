@@ -1,10 +1,10 @@
 import apiClient from "./apiClients";
 
 export const wordServices = {
-  // 단어팩 출력 API
-  getDailyWords: async (wordpackId) => {
+  // 단어팩 출력 API (오늘 날짜 기준)
+  getDailyWords: async (wordpackId, userId) => {
     const response = await apiClient.get(
-      `/api/words/daily?wordpackId=${wordpackId}`
+      `/api/words/daily?wordpackId=${wordpackId}&userId=${userId}`
     );
     return response.data;
   },
@@ -91,10 +91,18 @@ export const wordServices = {
   },
 
   // Daily 주관식 테스트 결과 저장
-  saveDailyTestResult: async (userId, words) => {
+  saveDailyTestResult: async (words) => {
     const response = await apiClient.post("/api/words/test/daily", {
-      userId,
       words,
+    });
+    return response.data;
+  },
+
+  // 새로운 단어 생성 API (pending 상태로)
+  startNewWordSet: async (wordpackId, userId) => {
+    const response = await apiClient.post("/api/words/test/start-set", {
+      wordpackId,
+      userId,
     });
     return response.data;
   },
@@ -119,7 +127,7 @@ export const wordServices = {
   // 학습 단어 저장 API
   saveLearningWord: async (wordId) => {
     const response = await apiClient.post("/api/words/test/learning-word", {
-      wordId,
+      wordId: wordId,
     });
     return response.data;
   },
