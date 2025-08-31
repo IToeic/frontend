@@ -219,7 +219,7 @@ const Main = ({
 
   if (activeTab === "MyPage" && myPageAllowed) {
     return (
-      <div className="flex-1 p-8 bg-white">
+      <div className="flex-1 p-8 bg-white min-h-[747px]">
         <MyPage />
         <Footer />
       </div>
@@ -228,15 +228,17 @@ const Main = ({
 
   return (
     <div className="flex-1 p-8 bg-white min-h-[747px]">
-      {tabComponents[activeTab]?.[activeSubTab] || (
-        <DashBoard
-          setActiveTab={setActiveTab}
-          setActiveSubTab={setActiveSubTab}
-          setExpandedTab={setExpandedTab}
-          selectedWordPack={selectedWordPack}
-          setSelectedWordPack={setSelectedWordPack}
-        />
-      )}
+      <div className="min-h-[600px]">
+        {tabComponents[activeTab]?.[activeSubTab] || (
+          <DashBoard
+            setActiveTab={setActiveTab}
+            setActiveSubTab={setActiveSubTab}
+            setExpandedTab={setExpandedTab}
+            selectedWordPack={selectedWordPack}
+            setSelectedWordPack={setSelectedWordPack}
+          />
+        )}
+      </div>
       <Footer />
     </div>
   );
