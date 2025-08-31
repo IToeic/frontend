@@ -100,6 +100,14 @@ export const wordServices = {
     return response.data;
   },
 
+  // 학습 단어 저장 API
+  saveLearningWord: async (wordId) => {
+    const response = await apiClient.post("/api/words/test/learning-word", {
+      wordId,
+    });
+    return response.data;
+  },
+
   // TTS 발음 재생 API
   getTTSAudio: async (word) => {
     const response = await apiClient.get(`/api/tts/${word}`, {

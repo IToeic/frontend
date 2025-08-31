@@ -9,10 +9,12 @@ import { wordServices } from "../services/wordServices";
 const WordCard = ({ words, setActiveSubTab, page }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isBlindMode, setIsBlindMode] = useState(false);
-  const [favorites, setFavorites] = useState(words?.filter((w) => w.isFavorite) || []);
+  const [favorites, setFavorites] = useState(
+    words?.filter((w) => w.isFavorite) || []
+  );
   const { userId } = useUserStore();
   const navigate = useNavigate();
-  
+
   // words가 없거나 비어있는 경우 처리
   if (!words || words.length === 0) {
     return (
@@ -23,9 +25,9 @@ const WordCard = ({ words, setActiveSubTab, page }) => {
       </div>
     );
   }
-  
+
   const currentWord = words[currentIndex];
-  
+
   // currentWord가 undefined인 경우 처리
   if (!currentWord) {
     return (
@@ -45,7 +47,17 @@ const WordCard = ({ words, setActiveSubTab, page }) => {
   };
 
   // 다음 단어로 이동
-  const handleNext = () => {
+  const handleNext = async () => {
+    // WordStudy 페이지에서만 학습 단어 저장
+    if (page === "WordStudy" && currentWord?.wordId) {
+      try {
+        await wordServices.saveLearningWord(currentWord.wordId);
+      } catch (error) {
+        console.error("Failed to save learning word:", error);
+        // 에러가 발생해도 다음 단어로는 이동
+      }
+    }
+
     setCurrentIndex((prev) => prev + 1);
   };
 
@@ -160,10 +172,19 @@ const WordCard = ({ words, setActiveSubTab, page }) => {
           </div>
 
           <button
-            onClick={() => {
+            onClick={async () => {
               if (currentIndex !== len - 1) {
-                handleNext();
+                await handleNext();
               } else if (page === "WordStudy") {
+                // 마지막 단어도 저장
+                if (currentWord?.wordId) {
+                  try {
+                    await wordServices.saveLearningWord(currentWord.wordId);
+                    console.log("Last learning word saved:", currentWord.word);
+                  } catch (error) {
+                    console.error("Failed to save last learning word:", error);
+                  }
+                }
                 handlTodayTest();
               }
             }}
