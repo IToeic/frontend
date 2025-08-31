@@ -16,7 +16,6 @@ export const apiClient = axios.create({
 // 요청 인터셉터 - 요청 전에 실행
 apiClient.interceptors.request.use(
   (config) => {
-    console.log("API Request:", config.method?.toUpperCase(), config.url);
     return config;
   },
   (error) => {
@@ -28,7 +27,6 @@ apiClient.interceptors.request.use(
 // 응답 인터셉터 - 응답 후에 실행
 apiClient.interceptors.response.use(
   (response) => {
-    console.log("API Response:", response.status, response.config.url);
     return response;
   },
   (error) => {

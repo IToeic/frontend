@@ -54,12 +54,12 @@ const Main = ({
         const currentProgress = progressData?.find(
           (pack) => pack.wordpackId === selectedWordPack
         );
-        
+
         if (currentProgress) {
           // 50/50이면 진행도 1로 설정 (완료로 간주)
-          const progress = currentProgress.completeCount >= currentProgress.totalWords ? 1 : 0;
+          const progress =
+            currentProgress.completeCount >= currentProgress.totalWords ? 1 : 0;
           setWordPackProgress(progress);
-          console.log('단어팩 진행도:', currentProgress.completeCount, '/', currentProgress.totalWords, '=', progress);
         } else {
           setWordPackProgress(0);
         }
@@ -143,7 +143,7 @@ const Main = ({
       }
     } catch (error) {
       console.error("MyPage verification error:", error);
-      
+
       if (error.response?.status === 401) {
         alert("비밀번호가 올바르지 않습니다.");
         setPasswordError("비밀번호를 다시 확인해주세요.");
