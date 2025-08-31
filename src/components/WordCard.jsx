@@ -171,7 +171,6 @@ const WordCard = ({ words, setActiveSubTab, page }) => {
                 if (currentWord?.wordId) {
                   try {
                     await wordServices.saveLearningWord(currentWord.wordId);
-                    console.log("Last learning word saved:", currentWord.word);
                   } catch (error) {
                     console.error("Failed to save last learning word:", error);
                   }
@@ -179,7 +178,7 @@ const WordCard = ({ words, setActiveSubTab, page }) => {
                 handlTodayTest();
               }
             }}
-            className={`flex items-center py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 ${
+            className={`flex items-center justify-center min-w-[87px] py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 ${
               page !== "WordStudy" && currentIndex === len - 1
                 ? "opacity-0 pointer-events-none ml-[2%]"
                 : ""
