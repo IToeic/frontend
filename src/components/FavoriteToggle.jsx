@@ -8,11 +8,6 @@ const FavoriteToggle = ({ dev, wordId, favorites, setFavorites, userId }) => {
   const isFavorite = favorites.some((word) => word.wordId === wordId);
 
   const toggleFavorite = async () => {
-    if (!userId) {
-      alert("로그인이 필요합니다.");
-      return;
-    }
-
     dev && console.log("click toggle");
     dev && console.log(wordId);
     dev && console.log(favorites);

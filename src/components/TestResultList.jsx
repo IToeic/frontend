@@ -1,6 +1,8 @@
 import FavoriteToggle from "./FavoriteToggle";
+import useUserStore from "../stores/userStore";
 
 const TestResultList = ({ dev, word, favorites, setFavorites }) => {
+  const { userId } = useUserStore();
   const isCorrect = word.wrongCount === 0;
 
   return (
@@ -18,6 +20,7 @@ const TestResultList = ({ dev, word, favorites, setFavorites }) => {
           wordId={word.id}
           favorites={favorites}
           setFavorites={setFavorites}
+          userId={userId}
         />
       </div>
     </div>

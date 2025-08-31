@@ -125,7 +125,7 @@ const DashBoard = ({
         <div className="mb-6 text-gray-800">
           <p className="mb-2">✔ 오늘의 진행상황:</p>
 
-          <div className="bg-blue-100 p-6 rounded shadow-md flex items-center gap-6">
+          <div className="bg-white p-6 rounded shadow-md flex items-center gap-6">
             {/* 왼쪽 원형 차트 & 숫자 */}
             <div className="text-center">
               <div className="text-center">

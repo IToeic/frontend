@@ -88,7 +88,12 @@ const WordTest = ({ selectedWordPack }) => {
         );
         setTestWords(updatedTestWords);
 
-        setCurrentIdx((currentIdx + 1) % queue.length);
+        // 틀린 단어를 맨 마지막에 추가
+        const newQueue = [...queue];
+        newQueue.push(currentWord);
+
+        setQueue(newQueue);
+        setCurrentIdx(currentIdx + 1); // 다음 문제로 이동
       }
 
       setUserInput("");

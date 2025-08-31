@@ -4,7 +4,7 @@ import { useState } from "react";
 
 const WordTestResult = ({ dev, testWords }) => {
   const [favorites, setFavorites] = useState(
-    testWords.filter((w) => w.isFavorite)
+    testWords.filter((w) => w.isFavorite || w.favorite)
   );
   dev && console.log(testWords);
   //개발 모드 시 테스트 단어 출력
