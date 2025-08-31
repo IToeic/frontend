@@ -14,12 +14,17 @@ const Menu = ({
 
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
-    setExpandedTab(tabName); // 클릭 시 해당 탭을 고정
+    setExpandedTab(tabName);
     const subTab = MenuItems[tabName].subTabs[0].id;
     setActiveSubTab(subTab);
   };
 
   const handleSubTabClick = (subTabId) => {
+    const tabName = Object.keys(MenuItems).find((tabName) =>
+      MenuItems[tabName].subTabs.some((subTab) => subTab.id === subTabId)
+    );
+    setActiveTab(tabName);
+    setExpandedTab(tabName);
     setActiveSubTab(subTabId);
   };
 

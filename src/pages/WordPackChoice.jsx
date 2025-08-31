@@ -17,7 +17,6 @@ const WordPackChoice = ({ selectedWordPack, setSelectedWordPack, onBack }) => {
 
       try {
         const result = await wordServices.getWordpackProgress(userId);
-        console.log("WordPack API response:", result);
 
         if (result && Array.isArray(result)) {
           setWordPacks(result);

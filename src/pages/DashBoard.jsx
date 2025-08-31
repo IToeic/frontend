@@ -100,103 +100,190 @@ const DashBoard = ({
           onBack={() => setGoWordPackChoice(false)}
         />
       )}
-      <div className="flex-1 p-8 bg-white">
-        {/* 타이틀 */}
-        <h1 className="text-4xl font-bold mb-6">DashBoard</h1>
-
-        {/* 진행중인 단어팩 */}
-        <div className="mb-4 text-lg">
-          <span role="img" aria-label="folder">
-            📁
-          </span>
-          진행중인 단어팩:{" "}
-          <span className="font-semibold">
-            {currentProgress?.name || "선택되지 않음"}
-          </span>
-          <button
-            className="bg-blue-600 text-white px-2 py-1 ml-3 rounded hover:bg-blue-700 text-sm"
-            onClick={handleGoWordPackChoice}
-          >
-            변경
-          </button>
+      <div className="flex-1 p-8 bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
+        {/* 헤더 섹션 */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">Dashboard</h1>
+          <p className="text-gray-600">오늘의 학습 현황을 확인해보세요</p>
         </div>
 
-        {/* 오늘의 진행상황 */}
-        <div className="mb-6 text-gray-800">
-          <p className="mb-2">✔ 오늘의 진행상황:</p>
+        {/* 진행중인 단어팩 카드 */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+                <span className="text-white text-xl">📚</span>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800">
+                  진행중인 단어팩
+                </h3>
+                <p className="text-gray-600">
+                  {currentProgress?.name || "선택되지 않음"}
+                </p>
+              </div>
+            </div>
+            <button
+              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-md hover:shadow-lg transform  "
+              onClick={handleGoWordPackChoice}
+            >
+              변경하기
+            </button>
+          </div>
+        </div>
 
-          <div className="bg-white p-6 rounded shadow-md flex items-center gap-6">
-            {/* 왼쪽 원형 차트 & 숫자 */}
-            <div className="text-center">
-              <div className="text-center">
+        {/* 오늘의 진행상황 카드 */}
+        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-gray-100">
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
+              <span className="text-white text-lg">📊</span>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800">
+              오늘의 진행상황
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* 진행률 차트 */}
+            <div className="flex flex-col items-center">
+              <div className="mb-4">
                 <ProgressDoughnut
                   completeCount={currentProgress?.completeCount || 0}
                   totalWords={currentProgress?.totalWords || 0}
                 />
-                <p className="font-semibold text-sm mt-2">
-                  {currentProgress?.completeCount || 0} /{" "}
-                  {currentProgress?.totalWords || 0}
-                </p>
+              </div>
+              <p className="text-2xl font-bold text-gray-800">
+                {currentProgress?.completeCount || 0} /{" "}
+                {currentProgress?.totalWords || 0}
+              </p>
+              <p className="text-gray-600 text-sm">완료된 단어</p>
+            </div>
+
+            {/* 학습 통계 */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-sm">📖</span>
+                  </div>
+                  <span className="text-gray-700">오늘 배운 단어</span>
+                </div>
+                <span className="text-2xl font-bold text-blue-600">
+                  {currentProgress?.learningCount || 0}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-red-50 to-pink-50 rounded-xl">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-sm">❌</span>
+                  </div>
+                  <span className="text-gray-700">틀린 단어</span>
+                </div>
+                <span className="text-2xl font-bold text-red-600">
+                  {incorrectWordsCount}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-sm">🎯</span>
+                  </div>
+                  <span className="text-gray-700">남은 단어</span>
+                </div>
+                <span className="text-2xl font-bold text-emerald-600">
+                  {currentProgress?.totalWords -
+                    currentProgress?.completeCount || 0}
+                </span>
               </div>
             </div>
 
-            {/* 오른쪽 텍스트 */}
-            <div className="flex-1 space-y-1 text-sm ml-10">
-              <p>
-                📌 오늘 배운 단어:{" "}
-                <span className="font-semibold">
-                  {currentProgress?.learningCount || 0}개
-                </span>
-              </p>
-              <p>
-                ❌ 틀린 단어:{" "}
-                <span className="font-semibold">{incorrectWordsCount}개</span>
-              </p>
-              <p>
-                🔵 다음 단어{" "}
-                <span className="font-semibold">
-                  {currentProgress?.totalWords -
-                    currentProgress?.completeCount || 0}
-                  개
-                </span>{" "}
-                남았어요!
-              </p>
+            {/* 학습 바로가기 */}
+            <div className="flex flex-col justify-center">
               <button
-                className="mt-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm"
+                className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl transform   text-lg font-semibold"
                 onClick={handleGoWordStudy}
               >
-                👉 학습 바로가기
+                🚀 학습 시작하기
               </button>
             </div>
           </div>
         </div>
 
-        {/* 하단 카드 영역 */}
-        <div className="flex gap-6 mt-10">
+        {/* 통계 카드 영역 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* 내 단어장 카드 */}
-          <div className="bg-blue-50 w-40 h-40 flex flex-col items-center justify-center text-center text-blue-700 shadow-sm rounded-lg border border-blue-200">
-            <div className="text-3xl mb-2">📚</div>
-            <div className="text-2xl font-bold">{myWordsCount}</div>
-            <div className="text-sm">내 단어장</div>
+          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform ">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+                <span className="text-2xl">📚</span>
+              </div>
+              <div className="text-right">
+                <p className="text-blue-100 text-sm">내 단어장</p>
+                <p className="text-3xl font-bold">{myWordsCount}</p>
+              </div>
+            </div>
           </div>
 
           {/* 오늘의 단어 카드 */}
-          <div className="bg-green-50 w-40 h-40 flex flex-col items-center justify-center text-center text-green-700 shadow-sm rounded-lg border border-green-200">
-            <div className="text-3xl mb-2">📅</div>
-            <div className="text-2xl font-bold">{todayWordsCount}</div>
-            <div className="text-sm">오늘의 단어</div>
+          <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform  ">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+                <span className="text-2xl">📅</span>
+              </div>
+              <div className="text-right">
+                <p className="text-green-100 text-sm">오늘의 단어</p>
+                <p className="text-3xl font-bold">{todayWordsCount}</p>
+              </div>
+            </div>
           </div>
 
           {/* 틀린 단어 카드 */}
-          <div className="bg-red-50 w-40 h-40 flex flex-col items-center justify-center text-center text-red-700 shadow-sm rounded-lg border border-red-200">
-            <div className="text-3xl mb-2">❌</div>
-            <div className="text-2xl font-bold">{incorrectWordsCount}</div>
-            <div className="text-sm">틀린 단어</div>
+          <div className="bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform  ">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+                <span className="text-2xl">❌</span>
+              </div>
+              <div className="text-right">
+                <p className="text-red-100 text-sm">틀린 단어</p>
+                <p className="text-3xl font-bold">{incorrectWordsCount}</p>
+              </div>
+            </div>
           </div>
 
-          {/* 명언 카드 */}
-          <div className="bg-gray-100 rounded-xl px-6 py-8 text-center text-lg shadow flex-1">
-            {quote.text}
+          {/* 학습 완료율 카드 */}
+          <div className="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform  ">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+                <span className="text-2xl">🎯</span>
+              </div>
+              <div className="text-right">
+                <p className="text-purple-100 text-sm">완료율</p>
+                <p className="text-3xl font-bold">
+                  {currentProgress?.totalWords > 0
+                    ? Math.round(
+                        (currentProgress?.completeCount /
+                          currentProgress?.totalWords) *
+                          100
+                      )
+                    : 0}
+                  %
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 명언 카드 */}
+        <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl p-8 shadow-lg border border-gray-100">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-white text-2xl">💭</span>
+            </div>
+            <p className="text-xl text-gray-700 italic leading-relaxed">
+              "{quote.text}"
+            </p>
           </div>
         </div>
       </div>
