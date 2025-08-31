@@ -95,7 +95,7 @@ const MyWord = ({ setActiveSubTab }) => {
             <div className="bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-700 flex justify-between">
               <div className="w-[40%]">단어</div>
               <div className="w-[40%]">뜻</div>
-              <div className="w-[20%] text-right">삭제</div>
+              <div className="w-[20%] text-right">학습완료</div>
             </div>
             <div className="flex flex-col divide-y">
               {words.map(({ wordId, word, meaning }) => (

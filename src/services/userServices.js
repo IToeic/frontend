@@ -14,15 +14,15 @@ export const userServices = {
         data: error.response?.data,
         message: error.message,
         code: error.code,
-        config: error.config
+        config: error.config,
       });
-      
+
       // 임시: 테스트용 비밀번호로 접근 허용
       if (password === "Password12#" || password === "test") {
         console.warn("Mock MyPage verification - 테스트용 비밀번호 사용");
         return { success: true, message: "인증 성공" };
       }
-      
+
       throw error;
     }
   },
@@ -35,22 +35,8 @@ export const userServices = {
       console.error("GetMyPageInfo error details:", {
         status: error.response?.status,
         data: error.response?.data,
-        message: error.message
+        message: error.message,
       });
-      
-      // 임시: Mock 응답
-      console.warn("Mock MyPage info - 테스트용 응답");
-      return {
-        success: true,
-        message: "마이페이지 정보 조회 성공",
-        data: {
-          userId: "user123",
-          name: "홍길동",
-          email: "user@example.com",
-          joinDate: "2024-01-01",
-          lastLoginDate: "2024-08-23T10:30:00"
-        }
-      };
     }
   },
 
@@ -66,14 +52,14 @@ export const userServices = {
       console.error("Update profile error details:", {
         status: error.response?.status,
         data: error.response?.data,
-        message: error.message
+        message: error.message,
       });
-      
+
       // 임시: Mock 응답
       console.warn("Mock profile update - 테스트용 응답");
-      return { 
-        success: true, 
-        message: "프로필이 성공적으로 수정되었습니다." 
+      return {
+        success: true,
+        message: "프로필이 성공적으로 수정되었습니다.",
       };
     }
   },
