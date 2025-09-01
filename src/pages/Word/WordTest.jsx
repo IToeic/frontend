@@ -93,12 +93,12 @@ const WordTest = ({ selectedWordPack }) => {
         );
         setTestWords(updatedTestWords);
 
-        // 틀린 단어를 맨 마지막에 추가
-        const newQueue = [...queue];
+        // 틀린 단어를 맨 마지막에 추가하고 현재 문제 제거
+        const newQueue = queue.filter((_, idx) => idx !== currentIdx);
         newQueue.push(currentWord);
 
         setQueue(newQueue);
-        setCurrentIdx(currentIdx + 1); // 다음 문제로 이동
+        setCurrentIdx(0); // 다음 문제로 이동 (인덱스가 0이 됨)
       }
 
       setUserInput("");

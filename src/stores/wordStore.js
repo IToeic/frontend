@@ -28,7 +28,6 @@ const useWordStore = create((set, get) => ({
     try {
       // 1. 오늘 날짜의 단어 조회
       const wordData = await wordServices.getDailyWords(wordpackId, userId);
-      console.log(wordData);
 
       // 2. 단어가 없으면 새로운 단어 생성
       if (!wordData || wordData.length === 0) {

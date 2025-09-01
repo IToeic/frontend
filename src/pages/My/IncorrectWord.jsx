@@ -30,12 +30,18 @@ const IncorrectWord = ({ setActiveSubTab }) => {
       }
 
       try {
-        const wordData = await wordServices.getIncorrectWords(userId);
+        const wordData = await wordServices.getIncorrectWords();
         setWords(wordData);
       } catch (error) {
         console.error("Failed to fetch incorrect words:", error);
-        alert("틀린 단어 모음을 불러오는데 실패했습니다.");
-        navigate("/");
+        // 404 오류는 백엔드가 준비되지 않은 경우이므로 조용히 처리
+        if (error.response?.status === 404) {
+          console.log("틀린 단어 API가 아직 준비되지 않았습니다.");
+          setWords([]);
+        } else {
+          alert("틀린 단어 모음을 불러오는데 실패했습니다.");
+          navigate("/");
+        }
       } finally {
         setLoading(false);
       }
@@ -94,7 +100,7 @@ const IncorrectWord = ({ setActiveSubTab }) => {
 
     try {
       // API 호출 - 선택된 단어들의 incorrectWordId 리스트 전달
-      await wordServices.deleteIncorrectWords(userId, selectedWords);
+      await wordServices.deleteIncorrectWords(selectedWords);
 
       // 성공적으로 삭제된 단어들을 목록에서 제거
       setWords(
@@ -106,7 +112,13 @@ const IncorrectWord = ({ setActiveSubTab }) => {
       alert("선택된 단어가 삭제되었습니다.");
     } catch (error) {
       console.error("Failed to delete selected words:", error);
-      alert("단어 삭제에 실패했습니다.");
+      // 404 오류는 백엔드가 준비되지 않은 경우이므로 조용히 처리
+      if (error.response?.status === 404) {
+        console.log("틀린 단어 삭제 API가 아직 준비되지 않았습니다.");
+        alert("틀린 단어 삭제 기능이 아직 준비되지 않았습니다.");
+      } else {
+        alert("단어 삭제에 실패했습니다.");
+      }
     }
   };
 
