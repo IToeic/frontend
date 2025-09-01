@@ -32,16 +32,32 @@ const DashBoard = ({
       }
 
       try {
-        // 병렬로 여러 API 호출
-        const [progress, myWords, incorrectWords] = await Promise.all([
-          wordServices.getWordpackProgress(userId),
-          wordServices.getMyWords(userId),
-          wordServices.getIncorrectWords(),
-        ]);
+        // 각 API 호출을 개별적으로 처리하여 일부 실패해도 다른 데이터는 표시
+        let progress = null;
+        let myWords = [];
+        let incorrectWords = [];
+
+        try {
+          progress = await wordServices.getWordpackProgress(userId);
+        } catch (error) {
+          console.error("Failed to fetch progress:", error);
+        }
+
+        try {
+          myWords = await wordServices.getMyWords(userId);
+        } catch (error) {
+          console.error("Failed to fetch my words:", error);
+        }
+
+        try {
+          incorrectWords = await wordServices.getIncorrectWords();
+        } catch (error) {
+          console.error("Failed to fetch incorrect words:", error);
+        }
 
         setProgressData(progress);
-        setMyWordsCount(myWords.length);
-        setIncorrectWordsCount(incorrectWords.length);
+        setMyWordsCount(myWords.length || 0);
+        setIncorrectWordsCount(incorrectWords.length || 0);
 
         // 현재 선택된 단어팩의 오늘 단어 개수 가져오기
         if (selectedWordPack) {
@@ -58,8 +74,11 @@ const DashBoard = ({
         }
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error);
-        alert("대시보드 데이터를 불러오는데 실패했습니다.");
-        navigate("/");
+        // 전체 실패 시에도 기본값으로 설정
+        setProgressData(null);
+        setMyWordsCount(0);
+        setIncorrectWordsCount(0);
+        setTodayWordsCount(0);
       } finally {
         setLoading(false);
       }

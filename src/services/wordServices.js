@@ -42,7 +42,7 @@ export const wordServices = {
 
   // 내 단어장 관련
   getMyWords: async (userId) => {
-    const response = await apiClient.get(`/api/user-words/user/${userId}`);
+    const response = await apiClient.get(`/api/user-words`);
     return response.data;
   },
 
