@@ -34,14 +34,8 @@ const IncorrectWord = ({ setActiveSubTab }) => {
         setWords(wordData);
       } catch (error) {
         console.error("Failed to fetch incorrect words:", error);
-        // 404 오류는 백엔드가 준비되지 않은 경우이므로 조용히 처리
-        if (error.response?.status === 404) {
-          console.log("틀린 단어 API가 아직 준비되지 않았습니다.");
-          setWords([]);
-        } else {
-          alert("틀린 단어 모음을 불러오는데 실패했습니다.");
-          navigate("/");
-        }
+        alert("틀린 단어 모음을 불러오는데 실패했습니다.");
+        navigate("/");
       } finally {
         setLoading(false);
       }

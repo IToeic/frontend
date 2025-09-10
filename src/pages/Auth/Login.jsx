@@ -71,48 +71,47 @@ const Login = ({ onLogin }) => {
   }
 
   return (
-    <div className="p-20">
-      {/* 로고 영역 */}
-      <div className="flex justify-center items-center w-full mt-10 mb-20">
-        <p className="text-5xl font-bold text-blue-600 ">IToeic</p>
-      </div>
-      <div className="items-center p-10 w-full">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex justify-center items-center">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        {/* 로고 영역 */}
+        <div className="text-center">
+          <p className="text-4xl sm:text-5xl font-bold text-blue-600">IToeic</p>
+        </div>
+
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          <div className="space-y-4">
             <input
-              className="border px-7 py-5 text-base w-[30%] rounded-t-3xl border-b-0 focus:outline-none"
+              className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="ID"
               {...register("id", { required: "ID를 입력해주세요." })}
             />
-          </div>
-          <div className="flex justify-center items-center">
             <input
               type="password"
-              className="border px-7 py-5 text-lg w-[30%] rounded-b-3xl focus:outline-none"
+              className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Password"
               {...register("password", {
                 required: "비밀번호를 입력해주세요.",
               })}
             />
           </div>
-          <div className="flex justify-center items-center ml-2 mt-2 mb-10 min-h-[20px]">
-            {passwordErrorMsg && (
-              <span className="text-red-500 text-xs w-[30%]">
-                {passwordErrorMsg}
-              </span>
-            )}
-          </div>
-          <div className="flex flex-col items-center w-[30%] mx-auto">
+
+          {passwordErrorMsg && (
+            <div className="text-center">
+              <span className="text-red-500 text-sm">{passwordErrorMsg}</span>
+            </div>
+          )}
+
+          <div className="space-y-4">
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white px-4 py-3 rounded hover:bg-blue-700 mb-1 disabled:bg-blue-300 disabled:cursor-not-allowed"
+              className="w-full bg-blue-500 text-white px-4 py-3 rounded-lg hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors duration-200"
               disabled={isSubmitting}
             >
               {isSubmitting ? "로그인 중..." : "Login"}
             </button>
             <button
               type="button"
-              className="mt-2 text-sm text-gray-500 hover:text-blue-500 self-end"
+              className="w-full text-sm text-gray-500 hover:text-blue-500 transition-colors duration-200"
               onClick={handleSignupPage}
             >
               Sign Up

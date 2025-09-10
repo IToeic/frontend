@@ -62,7 +62,9 @@ const MultipleChoiceList = ({ currentWord, handleSubmit, inputFlag }) => {
               inputFlag ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
             }`}
           >
-            {option}
+            <span className="notranslate" translate="no" lang="en">
+              {option}
+            </span>
           </button>
         ))}
       </div>

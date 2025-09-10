@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
 import { authServices } from "../../services/authServices";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -10,6 +11,20 @@ const Signup = () => {
   const [verificationCode, setVerificationCode] = useState("");
   const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [isVerifyingCode, setIsVerifyingCode] = useState(false);
+  const [selectedEmailDomain, setSelectedEmailDomain] = useState("gmail.com");
+  const [customEmailDomain, setCustomEmailDomain] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // 이메일 도메인 옵션
+  const emailDomains = [
+    { value: "gmail.com", label: "gmail.com" },
+    { value: "naver.com", label: "naver.com" },
+    { value: "daum.net", label: "daum.net" },
+    { value: "hotmail.com", label: "hotmail.com" },
+    { value: "itc.ac.kr", label: "itc.ac.kr" },
+    { value: "custom", label: "직접 입력" },
+  ];
 
   const {
     register,
@@ -31,7 +46,11 @@ const Signup = () => {
 
     try {
       // 이메일 조합
-      const email = data.emailId + "@itc.ac.kr";
+      const domain =
+        selectedEmailDomain === "custom"
+          ? customEmailDomain
+          : selectedEmailDomain;
+      const email = data.emailId + "@" + domain;
 
       const result = await authServices.signup(
         data.userId,
@@ -93,7 +112,11 @@ const Signup = () => {
 
     setIsSendingEmail(true);
     try {
-      const email = emailId + "@itc.ac.kr";
+      const domain =
+        selectedEmailDomain === "custom"
+          ? customEmailDomain
+          : selectedEmailDomain;
+      const email = emailId + "@" + domain;
       const result = await authServices.sendVerificationEmail(email);
 
       if (result.success) {
@@ -139,7 +162,11 @@ const Signup = () => {
     setIsVerifyingCode(true);
     try {
       const emailId = getValues("emailId");
-      const email = emailId + "@itc.ac.kr";
+      const domain =
+        selectedEmailDomain === "custom"
+          ? customEmailDomain
+          : selectedEmailDomain;
+      const email = emailId + "@" + domain;
       const result = await authServices.verifyEmailCode(
         email,
         verificationCode
@@ -181,6 +208,34 @@ const Signup = () => {
   // 비밀번호 확인 값
   const password = watch("password");
 
+  // 이메일 도메인 선택 핸들러
+  const handleEmailDomainSelect = (domain) => {
+    setSelectedEmailDomain(domain);
+    setIsDropdownOpen(false);
+    if (domain !== "custom") {
+      setCustomEmailDomain("");
+    }
+  };
+
+  // 커스텀 도메인 입력 핸들러
+  const handleCustomDomainChange = (e) => {
+    setCustomEmailDomain(e.target.value);
+  };
+
+  // 드롭다운 외부 클릭 시 닫기
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   // 아이디/비밀번호/비밀번호 재확인 중요도 순서 에러 메시지
   let passwordErrorMsg = "";
   if (errors.userId) {
@@ -209,30 +264,24 @@ const Signup = () => {
   }
 
   return (
-    <div className="p-20">
-      {/* 로고 영역 */}
-      <div className="flex justify-center items-center w-full mb-5">
-        <p className="text-5xl font-bold text-blue-600 ">IToeic</p>
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        {/* 로고 영역 */}
+        <div className="text-center">
+          <p className="text-4xl sm:text-5xl font-bold text-blue-600">IToeic</p>
+        </div>
 
-      {/* 폼 시작 */}
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="items-center p-10 w-full "
-      >
-        {/* ID, Password */}
-        <div>
-          <div className="flex justify-center items-center">
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          {/* ID, Password */}
+          <div className="space-y-4">
             <input
-              className="border px-7 py-5 text-base w-[40%] rounded-t-3xl border-b-0 focus:outline-none"
+              className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="ID"
               {...register("userId", { required: "아이디를 입력해주세요." })}
             />
-          </div>
-          <div className="flex justify-center items-center">
             <input
               type="password"
-              className="border px-7 py-5 text-lg w-[40%] border-b-0 focus:outline-none"
+              className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Password"
               {...register("password", {
                 required: "비밀번호를 입력해주세요.",
@@ -244,11 +293,9 @@ const Signup = () => {
                 },
               })}
             />
-          </div>
-          <div className="flex justify-center items-center">
             <input
               type="password"
-              className="border px-7 py-5 text-lg w-[40%] rounded-b-3xl focus:outline-none"
+              className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Confirm Password"
               {...register("passwordCheck", {
                 required: "비밀번호 확인을 입력해주세요.",
@@ -257,126 +304,158 @@ const Signup = () => {
               })}
             />
           </div>
-          {/* 에러 메시지: 비밀번호 확인 인풋 아래에만 중요도 순서로 하나만 표시 */}
-          <div className="flex justify-center items-center ml-2 mt-2 mb-10 min-h-[20px]">
-            {passwordErrorMsg && (
-              <span className="text-red-500 text-xs w-[40%]">
-                {passwordErrorMsg}
-              </span>
-            )}
-          </div>
-        </div>
 
-        {/* 이름 + 이메일 */}
-        <div className="mb-10">
-          <div className="flex justify-center items-center">
+          {passwordErrorMsg && (
+            <div className="text-center">
+              <span className="text-red-500 text-sm">{passwordErrorMsg}</span>
+            </div>
+          )}
+
+          {/* 이름 */}
+          <div className="grid grid-cols-2 gap-4">
             <input
-              className="border px-7 py-5 text-base w-[20%] rounded-tl-3xl border-r-0 border-b-0 focus:outline-none"
+              className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="First Name"
               {...register("firstName", {
                 required: "First Name을 입력해주세요.",
               })}
             />
             <input
-              className="border px-7 py-5 text-base w-[20%] rounded-tr-3xl border-b-0 focus:outline-none"
+              className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Last Name"
               {...register("lastName", {
                 required: "Last Name을 입력해주세요.",
               })}
             />
           </div>
-          {/* 이메일 입력 (도메인 고정) */}
-          <div className="flex justify-center items-center mt-0">
-            <div className="flex w-[40%]">
+
+          {/* 이메일 입력 */}
+          <div className="space-y-4">
+            {/* 이메일 아이디 입력 */}
+            <input
+              type="text"
+              className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="이메일 아이디"
+              disabled={isSendingEmail}
+              {...register("emailId", {
+                required: "이메일 아이디를 입력해주세요.",
+                pattern: {
+                  value: /^[a-zA-Z0-9._%+-]+$/,
+                  message: "올바른 이메일 아이디를 입력해주세요.",
+                },
+              })}
+              autoComplete="off"
+            />
+
+            {/* 이메일 도메인 선택 */}
+            <div className="relative" ref={dropdownRef}>
+              <button
+                type="button"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent flex items-center justify-between"
+              >
+                <span className="text-sm">
+                  @
+                  {selectedEmailDomain === "custom"
+                    ? customEmailDomain || "직접 입력"
+                    : selectedEmailDomain}
+                </span>
+                <ChevronDownIcon className="w-4 h-4" />
+              </button>
+
+              {isDropdownOpen && (
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                  {emailDomains.map((domain) => (
+                    <button
+                      key={domain.value}
+                      type="button"
+                      onClick={() => handleEmailDomainSelect(domain.value)}
+                      className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 first:rounded-t-lg last:rounded-b-lg"
+                    >
+                      @{domain.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* 커스텀 도메인 입력 */}
+            {selectedEmailDomain === "custom" && (
               <input
                 type="text"
-                className="border px-7 py-5 text-lg rounded-bl-3xl rounded-br-none focus:outline-none w-full border-r-0"
-                placeholder="School-issued Email"
-                disabled={isSendingEmail}
-                {...register("emailId", {
-                  required: "학교 이메일을 입력해주세요.",
-                  pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+$/,
-                    message: "학교 이메일을 올바르게 입력해주세요.",
-                  },
-                })}
-                autoComplete="off"
+                className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="도메인을 입력하세요 (예: example.com)"
+                value={customEmailDomain}
+                onChange={handleCustomDomainChange}
               />
-              <span className="border px-4 py-5 text-lg border-l-0 border-r-0 flex items-center select-none">
-                @itc.ac.kr
-              </span>
-              {/* 이메일 인증 버튼 */}
-              <div className="border px-2 py-5 text-lg rounded-br-3xl rounded-bl-none border-l-0 flex justify-center items-center min-w-[80px]">
-                <button
-                  type="button"
-                  className={`text-xs px-2 py-1 rounded whitespace-nowrap ${
-                    emailVerified
-                      ? "text-gray-700 bg-gray-300 cursor-not-allowed"
-                      : "text-white bg-blue-500 hover:bg-blue-700"
-                  }`}
-                  disabled={emailVerified || isSendingEmail}
-                  onClick={handleSendVerificationEmail}
-                >
-                  {isSendingEmail
-                    ? "발송 중..."
-                    : emailVerified
-                    ? "인증 완료"
-                    : "인증"}
-                </button>
-              </div>
-            </div>
-          </div>
+            )}
 
-          {/* 인증번호 입력 */}
-          {emailSent && !emailVerified && (
-            <div className="flex justify-center items-center mt-2">
-              <div className="flex w-[40%]">
+            {/* 이메일 인증 버튼 */}
+            <button
+              type="button"
+              className={`w-full px-4 py-3 text-base rounded-lg font-medium transition-colors duration-200 ${
+                emailVerified
+                  ? "text-gray-700 bg-gray-300 cursor-not-allowed"
+                  : "text-white bg-blue-500 hover:bg-blue-700"
+              }`}
+              disabled={emailVerified || isSendingEmail}
+              onClick={handleSendVerificationEmail}
+            >
+              {isSendingEmail
+                ? "발송 중..."
+                : emailVerified
+                ? "인증 완료"
+                : "이메일 인증"}
+            </button>
+
+            {/* 인증번호 입력 */}
+            {emailSent && !emailVerified && (
+              <div className="flex space-x-2">
                 <input
                   type="text"
-                  className="border px-4 py-2 text-base rounded-l focus:outline-none w-full border-r-0"
+                  className="flex-1 px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="인증번호 입력"
                   value={verificationCode}
                   onChange={(e) => setVerificationCode(e.target.value)}
                 />
                 <button
                   type="button"
-                  className="text-sm px-4 py-2 rounded-r text-white bg-blue-500 hover:bg-blue-700"
+                  className="px-6 py-3 text-base rounded-lg text-white bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 whitespace-nowrap"
                   onClick={handleVerifyCode}
                   disabled={isVerifyingCode}
                 >
                   {isVerifyingCode ? "확인 중..." : "확인"}
                 </button>
               </div>
+            )}
+          </div>
+
+          {nameEmailErrorMsg && (
+            <div className="text-center">
+              <span className="text-red-500 text-sm">{nameEmailErrorMsg}</span>
             </div>
           )}
 
-          {/* 에러 메시지: 이메일 인풋 아래에만 중요도 순서로 하나만 표시 */}
-          <div className="flex justify-center items-center ml-2 mt-2 mb-4 min-h-[20px]">
-            {nameEmailErrorMsg && (
-              <span className="text-red-500 text-xs w-[40%]">
-                {nameEmailErrorMsg}
+          {/* 회원가입 버튼 */}
+          <div className="space-y-4">
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white px-4 py-3 rounded-lg hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors duration-200"
+              disabled={isSubmitting || !emailVerified}
+            >
+              {isSubmitting ? "가입 중..." : "Sign up"}
+            </button>
+            <div className="text-center">
+              <span className="text-sm text-gray-500">
+                이미 계정이 있으신가요?{" "}
+                <Link to="/login" className="text-blue-500 hover:underline">
+                  로그인하러 가기
+                </Link>
               </span>
-            )}
+            </div>
           </div>
-        </div>
-
-        {/* 회원가입 버튼 */}
-        <div className="flex flex-col items-center w-[40%] mx-auto">
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white px-4 py-3 rounded hover:bg-blue-700 mb-1 disabled:bg-blue-300 disabled:cursor-not-allowed"
-            disabled={isSubmitting || !emailVerified}
-          >
-            {isSubmitting ? "가입 중..." : "Sign up"}
-          </button>
-          <span className="mt-2 text-sm text-gray-500">
-            이미 계정이 있으신가요?{" "}
-            <Link to="/login" className="text-blue-500 hover:underline">
-              로그인하러 가기
-            </Link>
-          </span>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

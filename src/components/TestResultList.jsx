@@ -12,7 +12,13 @@ const TestResultList = ({ dev, word, favorites, setFavorites }) => {
       }`}
     >
       <div className="w-1/2 text-gray-700">{word.meaning}</div>
-      <div className="w-1/3 font-semibold text-gray-800">{word.word}</div>
+      <div
+        className="w-1/3 font-semibold text-gray-800 notranslate"
+        translate="no"
+        lang="en"
+      >
+        {word.word}
+      </div>
       <div className="w-1/4 text-gray-600 text-sm">{word.wrongCount}회</div>
       <div className="flex justify-center items-center w-1/12">
         <FavoriteToggle

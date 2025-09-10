@@ -27,19 +27,23 @@ const WordStudy = ({ setActiveSubTab, selectedWordPack }) => {
 
   if (!userId) {
     return (
-      <div className="flex-1 bg-gray-50 p-6">
+      <div className="flex-1 bg-gray-50 p-4 sm:p-6">
         <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          <div className="mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
               Today's Word
             </h1>
-            <p className="text-gray-600">오늘의 단어를 학습하세요</p>
+            <p className="text-gray-600 text-sm sm:text-base">
+              오늘의 단어를 학습하세요
+            </p>
           </div>
-          <div className="text-center py-8">
-            <p className="text-gray-600 mb-4">로그인이 필요합니다.</p>
+          <div className="text-center py-6 sm:py-8">
+            <p className="text-gray-600 mb-4 text-sm sm:text-base">
+              로그인이 필요합니다.
+            </p>
             <button
               onClick={() => navigate("/login")}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm sm:text-base"
             >
               로그인하기
             </button>
@@ -51,28 +55,32 @@ const WordStudy = ({ setActiveSubTab, selectedWordPack }) => {
 
   if (loading) {
     return (
-      <div className="flex-1 bg-gray-50 p-6">
+      <div className="flex-1 bg-gray-50 p-4 sm:p-6">
         <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          <div className="mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
               Today's Word
             </h1>
-            <p className="text-gray-600">오늘의 단어를 학습하세요</p>
+            <p className="text-gray-600 text-sm sm:text-base">
+              오늘의 단어를 학습하세요
+            </p>
           </div>
-          <div className="text-center">로딩 중...</div>
+          <div className="text-center text-sm sm:text-base">로딩 중...</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex-1 bg-gray-50 p-6">
+    <div className="flex-1 bg-gray-50 p-4 sm:p-6">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
             Today's Word
           </h1>
-          <p className="text-gray-600">오늘의 단어를 학습하세요</p>
+          <p className="text-gray-600 text-sm sm:text-base">
+            오늘의 단어를 학습하세요
+          </p>
         </div>
         <WordCard
           words={words}

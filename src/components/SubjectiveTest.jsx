@@ -29,6 +29,8 @@ const SubjectiveTest = ({
             className="border rounded px-4 py-2 text-lg w-[80%] mb-10"
             placeholder="단어를 입력하세요"
             disabled={inputFlag}
+            translate="no"
+            lang="en"
           />
           <div className="flex space-x-2 w-[80%]">
             <button

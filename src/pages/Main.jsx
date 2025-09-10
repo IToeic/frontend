@@ -175,7 +175,7 @@ const Main = ({
 
   if (emptyWordPack) {
     return (
-      <div className="flex-1 p-8 bg-white">
+      <div className="flex-1 p-4 sm:p-8 bg-white">
         <WordPackChoice
           seletedWordPack={selectedWordPack}
           setSelectedWordPack={setSelectedWordPack}
@@ -188,17 +188,17 @@ const Main = ({
   // 마이페이지 진입 시 비밀번호 확인 모달
   if (activeTab === "MyPage" && !myPageAllowed) {
     return (
-      <div className="flex-1 p-8 bg-white flex flex-col items-center justify-center min-h-[100%]">
+      <div className="flex-1 p-4 sm:p-8 bg-white flex flex-col items-center justify-center min-h-[100%]">
         <form
           onSubmit={handlePasswordCheck}
-          className="bg-white border rounded-lg shadow-md p-8 flex flex-col items-center"
+          className="bg-white border rounded-lg shadow-md p-4 sm:p-8 flex flex-col items-center w-full max-w-sm"
         >
-          <label className="mb-4 text-lg font-semibold">
+          <label className="mb-4 text-base sm:text-lg font-semibold">
             비밀번호를 입력하세요
           </label>
           <input
             type="password"
-            className="border px-4 py-2 rounded w-64 mb-4 focus:outline-none"
+            className="border px-4 py-2 rounded w-full mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={passwordInput}
             onChange={(e) => setPasswordInput(e.target.value)}
             autoFocus
@@ -208,7 +208,7 @@ const Main = ({
           )}
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded"
+            className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded w-full"
           >
             확인
           </button>
@@ -219,7 +219,7 @@ const Main = ({
 
   if (activeTab === "MyPage" && myPageAllowed) {
     return (
-      <div className="flex-1 p-8 bg-white min-h-[747px]">
+      <div className="flex-1 p-4 sm:p-8 bg-white min-h-[400px] sm:min-h-[747px]">
         <MyPage />
         <Footer />
       </div>
@@ -227,8 +227,8 @@ const Main = ({
   }
 
   return (
-    <div className="flex-1 p-8 bg-white min-h-[747px]">
-      <div className="min-h-[600px]">
+    <div className="flex-1 p-4 sm:p-8 bg-white min-h-[400px] sm:min-h-[747px]">
+      <div className="min-h-[300px] sm:min-h-[600px]">
         {tabComponents[activeTab]?.[activeSubTab] || (
           <DashBoard
             setActiveTab={setActiveTab}

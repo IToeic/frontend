@@ -15,7 +15,11 @@ const WordList = ({ id, word, meaning, deleteWord, isSelected, onSelect }) => {
         </div>
       )}
       <div
-        className={`${onSelect ? "w-[40%]" : "w-[40%]"} ml-14 text-gray-800`}
+        className={`${
+          onSelect ? "w-[40%]" : "w-[40%]"
+        } ml-14 text-gray-800 notranslate`}
+        translate="no"
+        lang="en"
       >
         {word}
       </div>

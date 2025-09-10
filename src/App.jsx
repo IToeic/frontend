@@ -5,23 +5,29 @@ import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
 import Header from "./layouts/Header";
 import Menu from "./layouts/Menu";
+import MobileMenu from "./layouts/MobileMenu";
 import Main from "./pages/Main";
 import useUserStore from "./stores/userStore";
 
 import "./App.css";
 
 function App() {
-  const { isLoggedIn, userId, username, login, logout } = useUserStore();
+  const { isLoggedIn, username, login } = useUserStore();
 
-  // 탭 상태
   const [activeTab, setActiveTab] = useState();
   const [activeSubTab, setActiveSubTab] = useState();
   const [expandedTab, setExpandedTab] = useState();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogoClick = () => {
     setActiveTab(null);
     setActiveSubTab(null);
     setExpandedTab(null);
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleMobileMenuToggle = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   return (
@@ -45,17 +51,22 @@ function App() {
                   onLogoClick={handleLogoClick}
                   setActiveTab={setActiveTab}
                   user={{ username }}
+                  onMobileMenuToggle={handleMobileMenuToggle}
+                  isMobileMenuOpen={isMobileMenuOpen}
                 />
-                <div className="flex-1 flex">
-                  <Menu
-                    className="w-64 bg-white shadow"
-                    activeTab={activeTab}
-                    setActiveTab={setActiveTab}
-                    activeSubTab={activeSubTab}
-                    setActiveSubTab={setActiveSubTab}
-                    expandedTab={expandedTab}
-                    setExpandedTab={setExpandedTab}
-                  />
+                <div className="flex-1 flex flex-col lg:flex-row">
+                  {/* 모바일에서는 숨김, 데스크톱에서는 표시 */}
+                  <div className="hidden lg:block">
+                    <Menu
+                      className="w-64 bg-white shadow"
+                      activeTab={activeTab}
+                      setActiveTab={setActiveTab}
+                      activeSubTab={activeSubTab}
+                      setActiveSubTab={setActiveSubTab}
+                      expandedTab={expandedTab}
+                      setExpandedTab={setExpandedTab}
+                    />
+                  </div>
                   <div className="flex-1 overflow-y-auto">
                     <Main
                       activeTab={activeTab}
@@ -66,6 +77,17 @@ function App() {
                     />
                   </div>
                 </div>
+                {/* 모바일 메뉴 */}
+                <MobileMenu
+                  isOpen={isMobileMenuOpen}
+                  onClose={() => setIsMobileMenuOpen(false)}
+                  activeTab={activeTab}
+                  setActiveTab={setActiveTab}
+                  activeSubTab={activeSubTab}
+                  setActiveSubTab={setActiveSubTab}
+                  expandedTab={expandedTab}
+                  setExpandedTab={setExpandedTab}
+                />
               </div>
             }
           />
