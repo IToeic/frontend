@@ -1,7 +1,10 @@
 import axios from "axios";
 
 // 환경변수에서 API URL 가져오기, 개발 환경에서는 프록시 사용
-const API_BASE_URL = process.env.NODE_ENV === 'development' ? "" : process.env.REACT_APP_API_BASE_URL;
+const API_BASE_URL =
+  process.env.NODE_ENV === "development"
+    ? ""
+    : process.env.REACT_APP_API_BASE_URL;
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -76,9 +79,9 @@ apiClient.interceptors.response.use(
           data: error.response?.data,
           url: error.config?.url,
         });
-        
+
         // 마이페이지 관련 요청이 아닌 경우에만 자동 로그아웃 처리
-        const isMyPageRequest = error.config?.url?.includes('/mypage');
+        const isMyPageRequest = error.config?.url?.includes("/mypage");
         if (!isMyPageRequest) {
           import("../stores/userStore")
             .then((module) => {

@@ -1,11 +1,12 @@
 import { create } from "zustand";
 import { wordServices } from "../services/wordServices";
+import wordSample from "../mock/wordSample";
 
 // 중복 호출 방지를 위한 플래그
 let isFetching = false;
 
 const useWordStore = create((set, get) => ({
-  dailyWords: [],
+  dailyWords: [...wordSample],
   loading: false,
   error: null,
 

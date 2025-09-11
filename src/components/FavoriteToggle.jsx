@@ -1,63 +1,57 @@
-import { useState, useEffect } from "react";
+import React from "react";
 import deactiveStar from "../assets/images/Freepik(DeactiveStar)-Flaticon.png";
 import activeStar from "../assets/images/PixelPerfect(ActiveStar)-Flaticon.png";
-import { wordServices } from "../services/wordServices";
-import useUserStore from "../stores/userStore";
 
-const FavoriteToggle = ({ dev, wordId }) => {
-  const { userId } = useUserStore();
-  const [favorites, setFavorites] = useState([]);
-  const [loading, setLoading] = useState(true);
+const FavoriteToggle = ({ dev, wordId, favorites, setFavorites, userId }) => {
+  // 임시 연결 - mock 데이터 사용
+  const loading = false;
 
-  // 내 단어장 목록 조회
-  useEffect(() => {
-    const fetchMyWords = async () => {
-      if (!userId) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const wordData = await wordServices.getMyWords(userId);
-        // wordId 배열로 변환
-        const favoriteIds = wordData.map((word) => word.wordId);
-        setFavorites(favoriteIds);
-      } catch (error) {
-        console.error("Failed to fetch my words:", error);
-        setFavorites([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMyWords();
-  }, [userId]);
-
-  const isFavorite = favorites.includes(wordId);
+  // 임시 연결 - mock 데이터로 즐겨찾기 상태 관리
+  const isFavorite =
+    favorites?.some((fav) => fav.wordId === wordId || fav.id === wordId) ||
+    false;
 
   const toggleFavorite = async () => {
     dev && console.log("click toggle");
     dev && console.log(wordId);
     dev && console.log(isFavorite);
 
-    try {
-      if (isFavorite) {
-        // 내 단어장에서 삭제
-        await wordServices.removeFromMyWords(userId, wordId);
-        setFavorites((prev) => prev.filter((id) => id !== wordId));
-      } else {
-        // 내 단어장에 추가
-        await wordServices.addToMyWords(userId, wordId);
-        setFavorites((prev) => [...prev, wordId]);
-      }
-    } catch (error) {
-      console.error("Failed to toggle favorite:", error);
-      alert("단어 추가/삭제에 실패했습니다.");
+    // 임시 연결 - 로컬에서만 즐겨찾기 상태 변경
+    if (isFavorite) {
+      // 즐겨찾기에서 제거
+      setFavorites((prev) =>
+        (prev || []).filter((fav) => fav.wordId !== wordId && fav.id !== wordId)
+      );
+    } else {
+      // 즐겨찾기에 추가
+      const newFavorite = {
+        wordId: wordId,
+        id: wordId,
+        word: "mock word",
+        meaning: "mock meaning",
+      };
+      setFavorites((prev) => [...(prev || []), newFavorite]);
     }
+
+    // API 호출 부분 주석 처리
+    // try {
+    //   if (isFavorite) {
+    //     // 내 단어장에서 삭제
+    //     await wordServices.removeFromMyWords(userId, wordId);
+    //     setFavorites((prev) => prev.filter((id) => id !== wordId));
+    //   } else {
+    //     // 내 단어장에 추가
+    //     await wordServices.addToMyWords(userId, wordId);
+    //     setFavorites((prev) => [...prev, wordId]);
+    //   }
+    // } catch (error) {
+    //   console.error("Failed to toggle favorite:", error);
+    //   alert("단어 추가/삭제에 실패했습니다.");
+    // }
   };
 
-  // 로딩 중이거나 userId가 없으면 빈 버튼 표시
-  if (loading || !userId) {
+  // 임시 연결 - 항상 활성화된 버튼 표시
+  if (loading) {
     return (
       <button
         disabled

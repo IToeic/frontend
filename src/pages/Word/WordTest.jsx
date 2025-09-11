@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import WordTestResult from "../../components/WordTestResult";
 import AnswerFeedback from "../../components/AnswerFeedback";
 import SubjectiveTest from "../../components/SubjectiveTest";
-import useUserStore from "../../stores/userStore";
-import useWordStore from "../../stores/wordStore";
+// import useUserStore from "../../stores/userStore";
+// import useWordStore from "../../stores/wordStore";
+import wordSample from "../../mock/wordSample"; // 임시 연결
 
 const WordTest = ({ selectedWordPack }) => {
   const dev = false;
@@ -23,40 +24,54 @@ const WordTest = ({ selectedWordPack }) => {
   let [inputFlag, setInputFlag] = useState(false);
   // flag 변수, 피드백 출력시 입력 불가
   const currentWord = queue[currentIdx];
-  const { userId } = useUserStore();
-  const { dailyWords, fetchDailyWords } = useWordStore();
-  const navigate = useNavigate();
+
+  // 임시 연결 - mock 데이터 사용
+  // const { userId } = useUserStore();
+  // const { dailyWords, fetchDailyWords } = useWordStore();
+  // const navigate = useNavigate();
 
   useEffect(() => {
-    const setupTestWords = async () => {
-      if (!selectedWordPack || !userId) return;
+    // 임시 연결 - mock 데이터로 테스트 단어 설정
+    const wordData = wordSample.slice(0, 5); // 처음 5개 단어만 사용
+    const wordsWithWrongCount = wordData.map((word) => ({
+      ...word,
+      wrongCount: 0,
+    }));
+    setTestWords(wordsWithWrongCount);
+    setQueue(wordData);
+  }, [selectedWordPack]);
 
-      try {
-        // wordStore에서 단어 가져옴 (없으면 새로 생성)
-        let wordData = dailyWords;
+  // API 호출 부분 주석 처리
+  // useEffect(() => {
+  //   const setupTestWords = async () => {
+  //     if (!selectedWordPack || !userId) return;
 
-        // dailyWords가 비어있으면 새로 가져오기
-        if (!wordData || wordData.length === 0) {
-          wordData = await fetchDailyWords(selectedWordPack, userId);
-        }
+  //     try {
+  //       // wordStore에서 단어 가져옴 (없으면 새로 생성)
+  //       let wordData = dailyWords;
 
-        const wordsWithWrongCount = wordData.map((word) => ({
-          ...word,
-          wrongCount: 0,
-        }));
-        setTestWords(wordsWithWrongCount);
-        setQueue(wordData);
-      } catch (error) {
-        console.error("Failed to fetch words:", error);
-        const errorMessage =
-          error.userMessage || "테스트 단어를 불러오는데 실패했습니다.";
-        alert(errorMessage);
-        navigate("/");
-      }
-    };
+  //       // dailyWords가 비어있으면 새로 가져오기
+  //       if (!wordData || wordData.length === 0) {
+  //         wordData = await fetchDailyWords(selectedWordPack, userId);
+  //       }
 
-    setupTestWords();
-  }, [selectedWordPack, userId]);
+  //       const wordsWithWrongCount = wordData.map((word) => ({
+  //         ...word,
+  //         wrongCount: 0,
+  //       }));
+  //       setTestWords(wordsWithWrongCount);
+  //       setQueue(wordData);
+  //     } catch (error) {
+  //       console.error("Failed to fetch words:", error);
+  //       const errorMessage =
+  //         error.userMessage || "테스트 단어를 불러오는데 실패했습니다.";
+  //       alert(errorMessage);
+  //       navigate("/");
+  //     }
+  //   };
+
+  //   setupTestWords();
+  // }, [selectedWordPack, userId]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -107,18 +122,22 @@ const WordTest = ({ selectedWordPack }) => {
   };
 
   const handleTestComplete = async () => {
-    try {
-      // Daily 테스트 결과 저장
-      const { wordServices } = await import("../../services/wordServices");
-      await wordServices.saveDailyTestResult(testWords);
-      setIsFinished(true);
-    } catch (error) {
-      console.error("Failed to save test result:", error);
-      const errorMessage =
-        error.userMessage || "테스트 결과 저장에 실패했습니다.";
-      alert(errorMessage);
-      navigate("/");
-    }
+    // 임시 연결 - API 호출 없이 바로 완료 처리
+    setIsFinished(true);
+
+    // API 호출 부분 주석 처리
+    // try {
+    //   // Daily 테스트 결과 저장
+    //   const { wordServices } = await import("../../services/wordServices");
+    //   await wordServices.saveDailyTestResult(testWords);
+    //   setIsFinished(true);
+    // } catch (error) {
+    //   console.error("Failed to save test result:", error);
+    //   const errorMessage =
+    //     error.userMessage || "테스트 결과 저장에 실패했습니다.";
+    //   alert(errorMessage);
+    //   navigate("/");
+    // }
   };
 
   if (isFinished) {
@@ -127,32 +146,42 @@ const WordTest = ({ selectedWordPack }) => {
 
   if (queue.length === 0) {
     return (
-      <div className="relative bg-gray-50 p-6">
-        <div className="max-w-4xl mx-auto mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Today's Test
-          </h1>
-          <p className="text-gray-600">학습한 단어를 테스트 해보세요</p>
+      <div className="flex-1 bg-gray-50 p-4 sm:p-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
+              Today's Test
+            </h1>
+            <p className="text-gray-600 text-sm sm:text-base">
+              학습한 단어를 테스트 해보세요
+            </p>
+          </div>
+          <div className="text-center text-sm sm:text-base">로딩 중...</div>
         </div>
-        <div className="text-center">로딩 중...</div>
       </div>
     );
   }
 
   return (
-    <div className="relative bg-gray-50 p-6">
-      <div className="max-w-4xl mx-auto mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Today's Test</h1>
-        <p className="text-gray-600">학습한 단어를 테스트 해보세요</p>
+    <div className="flex-1 bg-gray-50 p-4 sm:p-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
+            Today's Test
+          </h1>
+          <p className="text-gray-600 text-sm sm:text-base">
+            학습한 단어를 테스트 해보세요
+          </p>
+        </div>
+        {showFeedback && <AnswerFeedback isCorrect={isCorrect} />}
+        <SubjectiveTest
+          currentWord={currentWord}
+          handleSubmit={handleSubmit}
+          userInput={userInput}
+          setUserInput={setUserInput}
+          inputFlag={inputFlag}
+        />
       </div>
-      {showFeedback && <AnswerFeedback isCorrect={isCorrect} />}
-      <SubjectiveTest
-        currentWord={currentWord}
-        handleSubmit={handleSubmit}
-        userInput={userInput}
-        setUserInput={setUserInput}
-        inputFlag={inputFlag}
-      />
     </div>
   );
 };

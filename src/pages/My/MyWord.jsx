@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import WordList from "../../components/WordList";
 import WordCard from "../../components/WordCard";
-import { wordServices } from "../../services/wordServices";
-import useUserStore from "../../stores/userStore";
+// import { wordServices } from "../../services/wordServices";
+// import useUserStore from "../../stores/userStore";
+import wordSample from "../../mock/wordSample"; // 임시 연결
 
 const MyWord = ({ setActiveSubTab }) => {
   const [words, setWords] = useState([]);
@@ -11,45 +12,61 @@ const MyWord = ({ setActiveSubTab }) => {
   const [doStudy, setDoStudy] = useState(false);
   const [selectedWords, setSelectedWords] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
-  const { userId } = useUserStore();
-  const navigate = useNavigate();
+
+  // 임시 연결 - mock 데이터 사용
+  // const { userId } = useUserStore();
+  // const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchMyWords = async () => {
-      if (!userId) {
-        setLoading(false);
-        return;
-      }
+    // 임시 연결 - mock 데이터로 내 단어장 설정
+    setLoading(true);
+    setTimeout(() => {
+      setWords(wordSample.slice(0, 10)); // 처음 10개 단어를 내 단어장으로 사용
+      setLoading(false);
+    }, 500);
+  }, []);
 
-      try {
-        const wordData = await wordServices.getMyWords(userId);
-        setWords(wordData);
-      } catch (error) {
-        console.error("Failed to fetch my words:", error);
-        alert("내 단어장을 불러오는데 실패했습니다.");
-        navigate("/");
-      } finally {
-        setLoading(false);
-      }
-    };
+  // API 호출 부분 주석 처리
+  // useEffect(() => {
+  //   const fetchMyWords = async () => {
+  //     if (!userId) {
+  //       setLoading(false);
+  //       return;
+  //     }
 
-    fetchMyWords();
-  }, [userId]);
+  //     try {
+  //       const wordData = await wordServices.getMyWords(userId);
+  //       setWords(wordData);
+  //     } catch (error) {
+  //       console.error("Failed to fetch my words:", error);
+  //       alert("내 단어장을 불러오는데 실패했습니다.");
+  //       navigate("/");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchMyWords();
+  // }, [userId]);
 
   const deleteWord = async (wordId) => {
-    if (!userId) {
-      alert("사용자 정보가 없습니다.");
-      return;
-    }
+    // 임시 연결 - 로컬에서만 삭제
+    setWords(words.filter((w) => w.wordId !== wordId));
 
-    try {
-      await wordServices.removeFromMyWords(userId, wordId);
-      setWords(words.filter((w) => w.wordId !== wordId));
-    } catch (error) {
-      console.error("Failed to delete word:", error);
-      alert("단어 삭제에 실패했습니다.");
-      navigate("/");
-    }
+    // API 호출 부분 주석 처리
+    // if (!userId) {
+    //   alert("사용자 정보가 없습니다.");
+    //   return;
+    // }
+
+    // try {
+    //   await wordServices.removeFromMyWords(userId, wordId);
+    //   setWords(words.filter((w) => w.wordId !== wordId));
+    // } catch (error) {
+    //   console.error("Failed to delete word:", error);
+    //   alert("단어 삭제에 실패했습니다.");
+    //   navigate("/");
+    // }
   };
 
   const HandleStudyClick = () => {
@@ -88,42 +105,57 @@ const MyWord = ({ setActiveSubTab }) => {
       return;
     }
 
-    try {
-      // API 호출 - 선택된 단어들의 wordId 리스트 전달
-      await wordServices.deleteMyWords(userId, selectedWords);
+    // 임시 연결 - 로컬에서만 삭제
+    setWords(words.filter((word) => !selectedWords.includes(word.wordId)));
+    setSelectedWords([]);
+    setSelectAll(false);
+    alert("선택된 단어가 삭제되었습니다.");
 
-      // 성공적으로 삭제된 단어들을 목록에서 제거
-      setWords(words.filter((word) => !selectedWords.includes(word.wordId)));
-      setSelectedWords([]);
-      setSelectAll(false);
+    // API 호출 부분 주석 처리
+    // try {
+    //   // API 호출 - 선택된 단어들의 wordId 리스트 전달
+    //   await wordServices.deleteMyWords(userId, selectedWords);
 
-      alert("선택된 단어가 삭제되었습니다.");
-    } catch (error) {
-      console.error("Failed to delete selected words:", error);
-      alert("단어 삭제에 실패했습니다.");
-    }
+    //   // 성공적으로 삭제된 단어들을 목록에서 제거
+    //   setWords(words.filter((word) => !selectedWords.includes(word.wordId)));
+    //   setSelectedWords([]);
+    //   setSelectAll(false);
+
+    //   alert("선택된 단어가 삭제되었습니다.");
+    // } catch (error) {
+    //   console.error("Failed to delete selected words:", error);
+    //   alert("단어 삭제에 실패했습니다.");
+    // }
   };
 
   if (loading) {
     return (
-      <div className="relative bg-gray-50 p-6">
-        <div className="max-w-4xl mx-auto mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">My Words</h1>
-          <p className="text-gray-600">내 단어장</p>
-          <div className="text-center">로딩 중...</div>
+      <div className="flex-1 bg-gray-50 p-4 sm:p-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
+              My Words
+            </h1>
+            <p className="text-gray-600 text-sm sm:text-base">내 단어장</p>
+          </div>
+          <div className="text-center text-sm sm:text-base">로딩 중...</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="relative bg-gray-50 p-6">
-      <div className="max-w-4xl mx-auto mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">My Words</h1>
-        <p className="text-gray-600">내 단어장</p>
+    <div className="flex-1 bg-gray-50 p-4 sm:p-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
+            My Words
+          </h1>
+          <p className="text-gray-600 text-sm sm:text-base">내 단어장</p>
+        </div>
         <div
           className={`w-full ${
-            doStudy ? "" : "ml-[10%] max-w-2xl"
+            doStudy ? "" : "ml-0 sm:ml-[10%] max-w-2xl"
           } flex justify-end align-right gap-2`}
         >
           {!doStudy && (
@@ -150,9 +182,9 @@ const MyWord = ({ setActiveSubTab }) => {
             page="MyWord"
           />
         ) : (
-          <div className="w-full max-w-2xl bg-white rounded-xl shadow ml-[10%]">
-            <div className="bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-700 flex justify-between">
-              <div className="w-[10%]">
+          <div className="w-full max-w-2xl bg-white rounded-xl shadow ml-0 sm:ml-[10%]">
+            <div className="bg-gray-100 px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold text-gray-700 flex justify-between">
+              <div className="w-[10%] flex-shrink-0">
                 <input
                   type="checkbox"
                   checked={selectAll}
@@ -160,8 +192,8 @@ const MyWord = ({ setActiveSubTab }) => {
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
                 />
               </div>
-              <div className="w-[35%]">단어</div>
-              <div className="w-[35%]">뜻</div>
+              <div className="w-[35%] sm:w-[35%] ml-2 sm:ml-0">단어</div>
+              <div className="w-[35%] sm:w-[35%] ml-2 sm:ml-0">뜻</div>
             </div>
             <div className="flex flex-col divide-y">
               {words.map(({ wordId, word, meaning }) => (
@@ -172,7 +204,7 @@ const MyWord = ({ setActiveSubTab }) => {
                   meaning={meaning}
                   deleteWord={deleteWord}
                   isSelected={selectedWords.includes(wordId)}
-                  onSelect={() => handleSelectWord(wordId)}
+                  onSelect={handleSelectWord}
                 />
               ))}
               {words.length === 0 && (

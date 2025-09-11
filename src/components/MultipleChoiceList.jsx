@@ -39,25 +39,24 @@ const MultipleChoiceList = ({ currentWord, handleSubmit, inputFlag }) => {
     const isCorrect =
       selectedAnswer.toLowerCase() === currentWord.meaning.toLowerCase();
 
-    // handleSubmit 호출 (부모 컴포넌트에서 처리)
     const mockEvent = { preventDefault: () => {} };
     handleSubmit(mockEvent, selectedAnswer, isCorrect);
   };
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-3 sm:space-y-4">
       {/* 4지선다 버튼들 */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
         {options.map((option, index) => (
           <button
             key={index}
             value={option}
             onClick={(e) => handleSubmitClick(e.target.value)}
             disabled={inputFlag}
-            className={`p-4 text-lg font-medium rounded-lg border-2 transition-all ${
+            className={`p-3 sm:p-4 text-sm sm:text-lg font-medium rounded-lg border-2 transition-all text-center ${
               selectedAnswer === option
                 ? "border-blue-500 bg-blue-50 text-blue-700"
-                : "border-gray-300 bg-white text-gray-700 hover:border-gray-400"
+                : "border-gray-300 bg-white text-gray-700 "
             } ${
               inputFlag ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
             }`}

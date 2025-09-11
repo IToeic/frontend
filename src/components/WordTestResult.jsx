@@ -9,28 +9,44 @@ const WordTestResult = ({ dev, testWords }) => {
   dev && console.log(testWords);
   //개발 모드 시 테스트 단어 출력
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center py-10">
-      <div className="w-full max-w-2xl bg-white rounded-xl shadow p-6 mb-8 flex flex-col items-center">
-        <h2 className="text-2xl font-bold mb-2">테스트 통과 🎉</h2>
-        <h3 className="text-lg mb-8">수고하셨습니다!</h3>
-        <div className="w-full max-w-2xl bg-white rounded-xl shadow overflow-hidden">
-          <div className="bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-700 flex justify-between">
-            <div className="w-1/2">뜻</div>
-            <div className="w-1/3">단어</div>
-            <div className="w-1/4">오답 횟수</div>
-            <div className="w-1/12"></div>
-          </div>
-          <div className="flex flex-col">
-            {testWords.map((word) => (
-              <TestResultList
-                key={word.wordId || word.id || word.word}
-                dev={dev}
-                word={word}
-                favorites={favorites}
-                setFavorites={setFavorites}
-              />
-            ))}
-          </div>
+    <div className="flex-1 bg-gray-50 p-4 sm:p-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2 text-center">
+            테스트 통과 ✨
+          </h1>
+          <p className="text-gray-600 text-sm sm:text-base text-center">
+            수고하셨습니다!
+          </p>
+        </div>
+        <div className="w-full bg-white rounded-xl shadow overflow-hidden">
+          <table className="w-full">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold text-gray-700 text-left">
+                  뜻
+                </th>
+                <th className="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold text-gray-700 text-left">
+                  단어
+                </th>
+                <th className="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold text-gray-700 text-center">
+                  오답
+                </th>
+                <th className="px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold text-gray-700 text-center min-w-[60px]"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {testWords.map((word) => (
+                <TestResultList
+                  key={word.wordId || word.id || word.word}
+                  dev={dev}
+                  word={word}
+                  favorites={favorites}
+                  setFavorites={setFavorites}
+                />
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
