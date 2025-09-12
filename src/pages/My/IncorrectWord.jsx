@@ -15,7 +15,6 @@ const IncorrectWord = ({ setActiveSubTab }) => {
   const [isCorrect, setIsCorrect] = useState(false);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedWords, setSelectedWords] = useState([]);
-  const [selectAll, setSelectAll] = useState(false);
   // test input 값
   let [inputFlag, setInputFlag] = useState(false);
   // flag 변수, 피드백 출력시 입력 불가
@@ -82,21 +81,13 @@ const IncorrectWord = ({ setActiveSubTab }) => {
   };
 
   const handleSelectWord = (wordId) => {
-    setSelectedWords((prev) =>
-      prev.includes(wordId)
+    setSelectedWords((prev) => {
+      const isSelected = prev.includes(wordId);
+      const newSelected = isSelected
         ? prev.filter((id) => id !== wordId)
-        : [...prev, wordId]
-    );
-  };
-
-  const handleSelectAll = () => {
-    if (selectAll) {
-      setSelectedWords([]);
-      setSelectAll(false);
-    } else {
-      setSelectedWords(words.map((word) => word.incorrectWordId));
-      setSelectAll(true);
-    }
+        : [...prev, wordId];
+      return newSelected;
+    });
   };
 
   const handleDeleteSelected = async () => {
@@ -118,32 +109,7 @@ const IncorrectWord = ({ setActiveSubTab }) => {
       words.filter((word) => !selectedWords.includes(word.incorrectWordId))
     );
     setSelectedWords([]);
-    setSelectAll(false);
     alert("선택된 단어가 삭제되었습니다.");
-
-    // API 호출 부분 주석 처리
-    // try {
-    //   // API 호출 - 선택된 단어들의 incorrectWordId 리스트 전달
-    //   await wordServices.deleteIncorrectWords(selectedWords);
-
-    //   // 성공적으로 삭제된 단어들을 목록에서 제거
-    //   setWords(
-    //     words.filter((word) => !selectedWords.includes(word.incorrectWordId))
-    //   );
-    //   setSelectedWords([]);
-    //   setSelectAll(false);
-
-    //   alert("선택된 단어가 삭제되었습니다.");
-    // } catch (error) {
-    //   console.error("Failed to delete selected words:", error);
-    //   // 404 오류는 백엔드가 준비되지 않은 경우이므로 조용히 처리
-    //   if (error.response?.status === 404) {
-    //     console.log("틀린 단어 삭제 API가 아직 준비되지 않았습니다.");
-    //     alert("틀린 단어 삭제 기능이 아직 준비되지 않았습니다.");
-    //   } else {
-    //     alert("단어 삭제에 실패했습니다.");
-    //   }
-    // }
   };
 
   const handleSubmit = (e, selectedAnswer, isAnswerCorrect) => {
@@ -237,14 +203,7 @@ const IncorrectWord = ({ setActiveSubTab }) => {
         ) : (
           <div className="w-full max-w-2xl bg-white rounded-xl shadow ml-0 sm:ml-[10%]">
             <div className="bg-gray-100 px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold text-gray-700 flex justify-between">
-              <div className="w-[10%] flex-shrink-0">
-                <input
-                  type="checkbox"
-                  checked={selectAll}
-                  onChange={handleSelectAll}
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                />
-              </div>
+              <div className="w-[10%] flex-shrink-0"></div>
               <div className="w-[35%] sm:w-[35%] ml-2 sm:ml-0">단어</div>
               <div className="w-[35%] sm:w-[35%] ml-2 sm:ml-0">뜻</div>
             </div>
@@ -256,8 +215,8 @@ const IncorrectWord = ({ setActiveSubTab }) => {
                   word={word}
                   meaning={meaning}
                   deleteWord={deleteWord}
-                  isSelected={selectedWords.includes(incorrectWordId)}
-                  onSelect={handleSelectWord}
+                  checked={selectedWords.includes(incorrectWordId)}
+                  onToggle={handleSelectWord}
                 />
               ))}
               {words.length === 0 && (
