@@ -9,6 +9,7 @@ import useUserStore from "../stores/userStore";
 const WordCard = ({ words, setActiveSubTab, page }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isBlindMode, setIsBlindMode] = useState(false);
+  const [favorites, setFavorites] = useState([]);
 
   const navigate = useNavigate();
   const { userId } = useUserStore();
@@ -106,7 +107,14 @@ const WordCard = ({ words, setActiveSubTab, page }) => {
             </label>
           </div>
 
-          {page !== "MyWord" && <FavoriteToggle wordId={currentWord?.wordId} />}
+          {page !== "MyWord" && (
+            <FavoriteToggle
+              wordId={currentWord?.wordId || currentWord?.id}
+              favorites={favorites}
+              setFavorites={setFavorites}
+              userId={userId}
+            />
+          )}
         </div>
 
         {/* 단어 내용 */}

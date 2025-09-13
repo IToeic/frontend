@@ -11,7 +11,6 @@ const MyWord = ({ setActiveSubTab }) => {
   const [loading, setLoading] = useState(true);
   const [doStudy, setDoStudy] = useState(false);
   const [selectedWords, setSelectedWords] = useState([]);
-  const [selectAll, setSelectAll] = useState(false);
 
   // 임시 연결 - mock 데이터 사용
   // const { userId } = useUserStore();
@@ -54,11 +53,6 @@ const MyWord = ({ setActiveSubTab }) => {
     setWords(words.filter((w) => w.wordId !== wordId));
 
     // API 호출 부분 주석 처리
-    // if (!userId) {
-    //   alert("사용자 정보가 없습니다.");
-    //   return;
-    // }
-
     // try {
     //   await wordServices.removeFromMyWords(userId, wordId);
     //   setWords(words.filter((w) => w.wordId !== wordId));
@@ -74,21 +68,13 @@ const MyWord = ({ setActiveSubTab }) => {
   };
 
   const handleSelectWord = (wordId) => {
-    setSelectedWords((prev) =>
-      prev.includes(wordId)
+    setSelectedWords((prev) => {
+      const isSelected = prev.includes(wordId);
+      const newSelected = isSelected
         ? prev.filter((id) => id !== wordId)
-        : [...prev, wordId]
-    );
-  };
-
-  const handleSelectAll = () => {
-    if (selectAll) {
-      setSelectedWords([]);
-      setSelectAll(false);
-    } else {
-      setSelectedWords(words.map((word) => word.wordId));
-      setSelectAll(true);
-    }
+        : [...prev, wordId];
+      return newSelected;
+    });
   };
 
   const handleDeleteSelected = async () => {
@@ -106,26 +92,9 @@ const MyWord = ({ setActiveSubTab }) => {
     }
 
     // 임시 연결 - 로컬에서만 삭제
-    setWords(words.filter((word) => !selectedWords.includes(word.wordId)));
+    setWords(words.filter((word) => !selectedWords.includes(word.id)));
     setSelectedWords([]);
-    setSelectAll(false);
     alert("선택된 단어가 삭제되었습니다.");
-
-    // API 호출 부분 주석 처리
-    // try {
-    //   // API 호출 - 선택된 단어들의 wordId 리스트 전달
-    //   await wordServices.deleteMyWords(userId, selectedWords);
-
-    //   // 성공적으로 삭제된 단어들을 목록에서 제거
-    //   setWords(words.filter((word) => !selectedWords.includes(word.wordId)));
-    //   setSelectedWords([]);
-    //   setSelectAll(false);
-
-    //   alert("선택된 단어가 삭제되었습니다.");
-    // } catch (error) {
-    //   console.error("Failed to delete selected words:", error);
-    //   alert("단어 삭제에 실패했습니다.");
-    // }
   };
 
   if (loading) {
@@ -184,27 +153,20 @@ const MyWord = ({ setActiveSubTab }) => {
         ) : (
           <div className="w-full max-w-2xl bg-white rounded-xl shadow ml-0 sm:ml-[10%]">
             <div className="bg-gray-100 px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold text-gray-700 flex justify-between">
-              <div className="w-[10%] flex-shrink-0">
-                <input
-                  type="checkbox"
-                  checked={selectAll}
-                  onChange={handleSelectAll}
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                />
-              </div>
+              <div className="w-[10%] flex-shrink-0"></div>
               <div className="w-[35%] sm:w-[35%] ml-2 sm:ml-0">단어</div>
               <div className="w-[35%] sm:w-[35%] ml-2 sm:ml-0">뜻</div>
             </div>
             <div className="flex flex-col divide-y">
-              {words.map(({ wordId, word, meaning }) => (
+              {words.map(({ id, word, meaning }) => (
                 <WordList
-                  key={wordId}
-                  id={wordId}
+                  key={id}
+                  id={id}
                   word={word}
                   meaning={meaning}
                   deleteWord={deleteWord}
-                  isSelected={selectedWords.includes(wordId)}
-                  onSelect={handleSelectWord}
+                  checked={selectedWords.includes(id)}
+                  onToggle={handleSelectWord}
                 />
               ))}
               {words.length === 0 && (
