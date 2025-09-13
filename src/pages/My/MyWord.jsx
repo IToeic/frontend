@@ -123,7 +123,7 @@ const MyWord = ({ setActiveSubTab }) => {
           <p className="text-gray-600 text-sm sm:text-base">내 단어장</p>
         </div>
         <div
-          className={`w-full ${
+          className={` ${
             doStudy ? "" : "ml-0 sm:ml-[10%] max-w-2xl"
           } flex justify-end align-right gap-2`}
         >
@@ -151,7 +151,7 @@ const MyWord = ({ setActiveSubTab }) => {
             page="MyWord"
           />
         ) : (
-          <div className="w-full max-w-2xl bg-white rounded-xl shadow ml-0 sm:ml-[10%]">
+          <div className="max-w-2xl bg-white rounded-xl shadow ml-0 sm:ml-[10%]">
             <div className="bg-gray-100 px-2 sm:px-4 py-3 text-xs sm:text-sm font-semibold text-gray-700 flex justify-between">
               <div className="w-[10%] flex-shrink-0"></div>
               <div className="w-[35%] sm:w-[35%] ml-2 sm:ml-0">단어</div>
