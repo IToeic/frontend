@@ -1,3 +1,3 @@
-const indexesWithWordPackChoice = ["Word", "Test"];
+const indexesWithWordPackChoice = ["Word", "WordPack"];
 
 export default indexesWithWordPackChoice;

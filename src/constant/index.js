@@ -2,13 +2,27 @@ const MenuItems = {
   Word: {
     label: "Word",
     subTabs: [
-      { id: "Study", label: "Study", description: "하루에 다섯개씩 학습" },
-      { id: "TodayTest", label: "Test", description: "학습한 단어 시험" },
+      {
+        id: "WordStudy",
+        label: "Daily Words",
+        description: "하루에 다섯개씩 학습",
+      },
+      {
+        id: "WordTest",
+        label: "Review Test",
+        description: "학습한 단어 시험",
+      },
     ],
   },
   Test: {
-    label: "Test",
-    subTabs: [{ id: "Test", label: "Test", description: "단어팩 시험" }],
+    label: "WordPack",
+    subTabs: [
+      {
+        id: "WordPackTest",
+        label: "Mastery Test",
+        description: "단어팩 시험",
+      },
+    ],
   },
   My: {
     label: "My",
