@@ -147,25 +147,51 @@ const DashBoard = ({
 
       {/* 진행중인 단어팩 카드 */}
       <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-100">
-        <div className="flex items-center justify-between">
+        {/* --- 넓은 화면용 레이아웃 (sm 사이즈 이상에서만 보임) --- */}
+        <div className="hidden sm:flex items-center justify-between">
+          {/* 좌측 (아이콘 + 텍스트) */}
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center flex-shrink-0">
               <span className="text-white text-xl">📚</span>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-800">
+              <h3 className="text-lg font-semibold text-gray-800 break-keep">
                 진행중인 단어팩
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 break-keep">
                 {currentProgress?.name || "선택되지 않음"}
               </p>
             </div>
           </div>
+
+          {/* 우측 (기존 버튼) */}
           <button
-            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-md hover:shadow-lg transform  "
+            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-md hover:shadow-lg transform whitespace-nowrap"
             onClick={handleGoWordPackChoice}
           >
             변경하기
+          </button>
+        </div>
+
+        {/* --- 좁은 화면용 레이아웃 (sm 사이즈 미만에서만 보임) --- */}
+        <div className="block sm:hidden">
+          {/* 상단 (텍스트만) */}
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800 break-keep">
+              진행중인 단어팩
+            </h3>
+            <p className="text-gray-600 break-keep">
+              {currentProgress?.name || "선택되지 않음"}
+            </p>
+          </div>
+
+          {/* 하단 (아이콘 + 텍스트 합쳐진 새 버튼) */}
+          <button
+            className="mt-4 w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center space-x-2"
+            onClick={handleGoWordPackChoice}
+          >
+            <span className="text-xl">📚</span>
+            <span>변경하기</span>
           </button>
         </div>
       </div>
@@ -176,7 +202,7 @@ const DashBoard = ({
           <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
             <span className="text-white text-lg">📊</span>
           </div>
-          <h2 className="text-2xl font-bold text-gray-800">오늘의 진행상황</h2>
+          <h2 className="text-2xl font-bold text-gray-800 break-keep">오늘의 진행상황</h2>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -238,7 +264,7 @@ const DashBoard = ({
           {/* 학습 바로가기 */}
           <div className="flex flex-col justify-center">
             <button
-              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl transform   text-lg font-semibold"
+              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl transform text-lg font-semibold whitespace-now" // <-- 이 부분을 추가해주세요
               onClick={handleGoWordStudy}
             >
               🚀 학습 시작하기
@@ -269,7 +295,7 @@ const DashBoard = ({
               <span className="text-2xl">📅</span>
             </div>
             <div className="text-right">
-              <p className="text-green-100 text-sm">오늘의 단어</p>
+              <p className="text-green-100 text-sm whitespace-nowrap">오늘의 단어</p>
               <p className="text-3xl font-bold">{todayWordsCount}</p>
             </div>
           </div>
@@ -282,7 +308,7 @@ const DashBoard = ({
               <span className="text-2xl">❌</span>
             </div>
             <div className="text-right">
-              <p className="text-red-100 text-sm">틀린 단어</p>
+              <p className="text-red-100 text-sm ">틀린 단어</p>
               <p className="text-3xl font-bold">{incorrectWordsCount}</p>
             </div>
           </div>
