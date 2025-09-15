@@ -29,7 +29,7 @@ const Menu = ({
   };
 
   return (
-    <div className="w-48 bg-gray-50 border-r border-gray-200">
+    <div className="w-48 bg-gray-50 border-r border-gray-200 h-full overflow-y-auto">
       <div className="p-4">
         <nav className="space-y-0">
           {Object.keys(MenuItems).map((tabName) => (
