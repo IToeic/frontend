@@ -1,5 +1,5 @@
-import React from "react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import logo from "../assets/images/logo.png";
 
 const Header = ({
   onLogoClick,
@@ -18,7 +18,7 @@ const Header = ({
                 onClick={onLogoClick}
                 className="text-xl sm:text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors duration-200 cursor-pointer"
               >
-                IToeic
+                <img className="h-24 mt-2" src={logo} alt="logo" />
               </button>
             </div>
           </div>
@@ -37,7 +37,6 @@ const Header = ({
             </button>
           </div>
 
-          {/* 우측 비워두기 (인증 제거) */}
           <div className="hidden lg:flex items-center space-x-4" />
         </div>
       </div>
