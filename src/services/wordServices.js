@@ -83,6 +83,12 @@ export const wordServices = {
     return response.data;
   },
 
+  // 단어팩별 틀린 단어 개수 조회
+  getIncorrectWordsCountByPack: async (packId) => {
+    const response = await apiClient.get(`/api/incorrect-words/pack/${packId}`);
+    return response.data;
+  },
+
   // Daily 주관식 테스트 결과 저장
   saveDailyTestResult: async (words) => {
     const response = await apiClient.post("/api/words/test/daily", {
