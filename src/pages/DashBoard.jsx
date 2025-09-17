@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import ProgressDoughnut from "../components/ProgressDoughnut";
 import quotes from "../mock/quotes";
 // import WordPackChoice from "./WordPackChoice";
-// import { wordServices } from "../services/wordServices";
+import { wordServices } from "../services/wordServices";
 // import useUserStore from "../stores/userStore";
 
 const DashBoard = ({
@@ -28,25 +28,56 @@ const DashBoard = ({
   // const navigate = useNavigate();
 
   useEffect(() => {
-    // 임시 연결 - mock 데이터로 대시보드 데이터 설정
-    setLoading(true);
-    setTimeout(() => {
-      const mockProgressData = [
-        {
-          wordpackId: selectedWordPack,
-          name: "토익 기본 단어",
-          totalWords: 50,
-          completeCount: 15,
-          learningCount: 5,
-        },
-      ];
+    const fetchDashboardData = async () => {
+      console.log("fetchDashboardData 시작");
+      setLoading(true);
 
-      setProgressData(mockProgressData);
-      setMyWordsCount(10); // MyWord에서 설정한 mock 데이터 개수
-      setIncorrectWordsCount(3); // IncorrectWord에서 설정한 mock 데이터 개수
-      setTodayWordsCount(5); // WordStudy에서 설정한 mock 데이터 개수
-      setLoading(false);
-    }, 500);
+      try {
+        // Mock 데이터로 기본 설정
+        const mockProgressData = [
+          {
+            wordpackId: selectedWordPack,
+            name: "토익 기본 단어",
+            totalWords: 50,
+            completeCount: 15,
+            learningCount: 5,
+          },
+        ];
+        setProgressData(mockProgressData);
+        setMyWordsCount(10);
+        setTodayWordsCount(5);
+
+        // 선택된 단어팩이 있을 때만 틀린 단어 개수 조회
+        if (selectedWordPack) {
+          console.log("단어팩 ID로 API 호출:", selectedWordPack);
+          try {
+            const incorrectWordsResult =
+              await wordServices.getIncorrectWordsCountByPack(selectedWordPack);
+            console.log("API 응답:", incorrectWordsResult);
+            setIncorrectWordsCount(incorrectWordsResult.count || 0);
+          } catch (error) {
+            console.warn("API 호출 실패:", error);
+            // API 실패 시 기본값 사용
+            setIncorrectWordsCount(0);
+          }
+        } else {
+          console.log("단어팩이 선택되지 않음");
+          setIncorrectWordsCount(0);
+        }
+      } catch (error) {
+        console.error("Failed to fetch dashboard data:", error);
+        // 전체 실패 시에도 기본값으로 설정
+        setProgressData(null);
+        setMyWordsCount(0);
+        setIncorrectWordsCount(0);
+        setTodayWordsCount(0);
+      } finally {
+        console.log("fetchDashboardData 완료");
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
   }, [selectedWordPack]);
 
   // API 호출 부분 주석 처리
@@ -202,7 +233,9 @@ const DashBoard = ({
           <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
             <span className="text-white text-lg">📊</span>
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 break-keep">오늘의 진행상황</h2>
+          <h2 className="text-2xl font-bold text-gray-800 break-keep">
+            오늘의 진행상황
+          </h2>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -295,7 +328,9 @@ const DashBoard = ({
               <span className="text-2xl">📅</span>
             </div>
             <div className="text-right">
-              <p className="text-green-100 text-sm whitespace-nowrap">오늘의 단어</p>
+              <p className="text-green-100 text-sm whitespace-nowrap">
+                오늘의 단어
+              </p>
               <p className="text-3xl font-bold">{todayWordsCount}</p>
             </div>
           </div>
