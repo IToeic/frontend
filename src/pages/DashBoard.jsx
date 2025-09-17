@@ -264,7 +264,7 @@ const DashBoard = ({
           {/* 학습 바로가기 */}
           <div className="flex flex-col justify-center">
             <button
-              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl transform text-lg font-semibold whitespace-now" // <-- 이 부분을 추가해주세요
+              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl transform text-lg font-semibold whitespace-nowrap" // <-- 이 부분을 추가해주세요
               onClick={handleGoWordStudy}
             >
               🚀 학습 시작하기
