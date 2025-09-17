@@ -106,16 +106,16 @@ const Main = ({
 
   const tabComponents = {
     Word: {
-      Study: (
+      WordStudy: (
         <WordStudy
           setActiveSubTab={setActiveSubTab}
           selectedWordPack={selectedWordPack}
         />
       ),
-      TodayTest: <WordTest selectedWordPack={selectedWordPack} />,
+      WordTest: <WordTest selectedWordPack={selectedWordPack} />,
     },
     Test: {
-      Test: <WordPackTest dev={dev} selectedWordPack={selectedWordPack} />,
+      WordPackTest: <WordPackTest dev={dev} selectedWordPack={selectedWordPack} />,
     },
     My: {
       MyWord: <MyWord setActiveSubTab={setActiveSubTab} />,
